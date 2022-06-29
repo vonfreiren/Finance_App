@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    {% include "navigation.html" %}
+    {% block body %}
+    {% include "header_main.html" %}
+    <div class="col-lg-10 col-md-10 mx-auto">
+        <div class="page-heading">
+            <div class="container">
+                <div class="post-heading">
+                    <div class="card-header">
+                        <h2>Montecarlo calculation</h2>
+                        <form method="POST">
+                            <div class="form-group" align="left">
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="asset"
+                                        name="asset"
+                                        placeholder="AAPL"
+                                        style="text-transform:uppercase"
+                                />
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="asset2"
+                                        name="asset2"
+                                        placeholder="BTC-USD"
+                                        style="text-transform:uppercase"
+                                />
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="asset3"
+                                        name="asset3"
+                                        placeholder="MSFT"
+                                        style="text-transform:uppercase"
+
+                                />
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="asset4"
+                                        name="asset4"
+                                        style="text-transform:uppercase"
+                                        placeholder="T"
+                                />
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="asset5"
+                                        name="asset5"
+                                        style="text-transform:uppercase"
+                                        placeholder="GC=F"
+                                />
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="asset6"
+                                        name="asset6"
+                                        style="text-transform:uppercase"
+
+                                        placeholder="F"
+                                />
+                            </div>
+
+
+                            <br>
+                            <button class="btn-sm btn-primary mx-3 pull-right" id="submit" align="right"
+                                    onsubmit="return false" onclick="loading3()"
+                                    type="submit">
+                                <i class="fas fa-spinner fa-spin" style="display:none;"></i>
+                                <span class="btn-text pull-right">Submit</span>
+                            </button>
+                            <input type="reset" class="btn-sm btn-primary pull-right">
+                            <p>
+
+                            </p>
+                            <br>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+    {% include "footer.html" %}
+</head>
+</html>

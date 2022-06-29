@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    {% include "navigation.html" %}
+    {% block body %}
+    {% include "header_main.html" %}
+
+
+    <div class="container" align="left">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 mx-auto">
+                <div class="page-heading">
+                    <h4>Portfolio Optimization</h4>
+                    <form method="POST">
+                        <div class="col-lg-12 col-md-12 mx-auto">
+                            <div class="form-group">
+                                {% for key, value in optValues.items() %}
+                                {% for key2, value2 in df2.items() %}
+                                {% if key == key2%}
+                                <li>Asset <strong>{{key}}</strong>: Number of shares: <strong>{{value}}</strong> |
+                                    Value: <strong>{{value2}}</strong></li>
+                                {% endif %}
+                                {% endfor %}
+                                {% endfor %}
+                                <li>Funds remaining: <strong>{{moneyLeft}}</strong></li>
+
+                                <img class="img-fluid" src="data:image/png;base64, {{ plot_url }}" , align="center">
+                            </div>
+                        </div>
+                        <br/>
+                        <button type="submit" value="Submit" class="btn-sm pull-right btn-primary">Calculate
+                            Again
+                        </button>
+                        <br>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    </div>
+    {% endblock %}
+    {% include "footer.html" %}
+</head>
+</html>

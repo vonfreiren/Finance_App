@@ -1,0 +1,54 @@
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>BTC-USD</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2017-09-15</th>
+      <td>15.3 %</td>
+    </tr>
+    <tr>
+      <th>2017-07-17</th>
+      <td>15.47 %</td>
+    </tr>
+    <tr>
+      <th>2019-10-25</th>
+      <td>15.58 %</td>
+    </tr>
+    <tr>
+      <th>2019-04-02</th>
+      <td>17.36 %</td>
+    </tr>
+    <tr>
+      <th>2015-01-15</th>
+      <td>17.82 %</td>
+    </tr>
+    <tr>
+      <th>2020-03-19</th>
+      <td>18.19 %</td>
+    </tr>
+    <tr>
+      <th>2021-02-08</th>
+      <td>18.75 %</td>
+    </tr>
+    <tr>
+      <th>2017-12-06</th>
+      <td>19.93 %</td>
+    </tr>
+    <tr>
+      <th>2017-07-20</th>
+      <td>23.94 %</td>
+    </tr>
+    <tr>
+      <th>2017-12-07</th>
+      <td>25.25 %</td>
+    </tr>
+  </tbody>
+</table>

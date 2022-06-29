@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    {% include "navigation.html" %}
+    {% block body %}
+    {% include "header_main.html" %}
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">F
+                <div class="page-heading">
+                    <h2>{{asset}} Best & Worst Days</h2>
+                    <form method="POST">
+                        <h5>Best Days</h5>
+                        <h1>{{name}}</h1>
+                        {{df_best | safe}}
+                        <br>
+                        <h5>Worst Days</h5>
+                        <h1>{{name}}</h1>
+                        {{df_worst | safe}}
+                        <br/>
+                        <button type="submit" class="btn-sm btn-primary">Calculate Again</button>
+                        <br>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    {% endblock %}
+    {% include "footer.html" %}
+</head>
+</html>

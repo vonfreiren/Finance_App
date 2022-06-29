@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    {% include "navigation.html" %}
+    {% block body %}
+    {% include "header_main.html" %}
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="page-heading">
+                    <div class="container">
+                        <div class="post-heading">
+                            <h2>Montecarlo Calculation</h2>
+                            <form method="POST">
+                                <div class="container" align="center">
+                                    <img class="img-fluid" src="data:image/png;base64, {{ plot_url }}" ,
+                                         align="center" alt="Result">
+                                </div>
+                                <br/>
+                                <button type="submit" class="btn-sm pull-right btn-primary">Calculate Again</button>
+                                <br>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    {% endblock %}
+    {% include "footer.html" %}
+</head>
+</html>

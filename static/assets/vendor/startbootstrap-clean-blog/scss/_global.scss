@@ -1,0 +1,128 @@
+// Global styling for this template
+body {
+    font-size: 14px;
+    color: $gray-900;
+}
+
+p {
+    line-height: 1.7;
+    margin-top: 20px;
+    margin-bottom : 20px;
+
+    a {
+        text-decoration: underline;
+    }
+}
+
+.big {
+    line-height: 0.5;
+    margin-top: 50px;
+    margin-bottom : 50px;
+
+    a {
+        text-decoration: underline;
+    }
+}
+
+.text-article {
+    color: #000;
+    margin-top: 20px;
+    margin-bottom : 20px;
+}
+.text-article:first-letter {
+    float:left;
+    font-weight: bold;
+    font-size: 70px;
+    font-size: 7rem;
+    line-height: 50px;
+    line-height: 5rem;
+    height:5rem;
+    text-transform: uppercase;
+    padding-right: 10px;
+}
+
+h1 {
+    font-weight: 800;
+    font-size: 28px;
+    text-align: center;
+}
+h2{
+    font-weight: 800;
+    font-size: 24px;
+    text-align: center;
+}
+h3{
+    font-weight: 800;
+    font-size: 22px;
+    text-align: center;
+
+}
+h4{
+    font-weight: 800;
+    font-size: 20px;
+    text-align: center;
+
+}
+h5{
+    font-weight: 800;
+    font-size: 18px;
+
+}
+h6 {
+    font-weight: 800;
+    font-size: 17px;
+
+}
+
+a {
+    color: $teal;
+
+    &:focus,
+    &:hover {
+        color: teal;
+    }
+}
+
+blockquote {
+    font-style: italic;
+    color: $gray-600;
+}
+
+.section-heading {
+    font-size: 36px;
+    font-weight: 700;
+    margin-top: 60px;
+}
+
+.caption {
+    font-size: 14px;
+    font-style: italic;
+    display: block;
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+::-moz-selection {
+    color: $white;
+    background: $primary;
+    text-shadow: none;
+}
+
+::selection {
+    color: $white;
+    background: $primary;
+    text-shadow: none;
+}
+
+img::selection {
+    color: $white;
+    background: transparent;
+}
+
+img::-moz-selection {
+    color: $white;
+    background: transparent;
+}

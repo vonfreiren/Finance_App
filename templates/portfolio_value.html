@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<script src="static/scripts.js"></script>
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    {% include "navigation.html" %}
+    {% block body %}
+    {% include "header_main.html" %}
+    <h4>Portfolio Value</h4>
+    <div class="container">
+        <div class="col-lg-12 col-md-12 mx-auto">
+            <div class="page-heading">
+                <div class="post-heading">
+                        <form name="form" method="POST">
+                            <div class='row'>
+                                <div class='col-md-4 col-sm-4'>
+                                    <label for="initialValue"><strong>Initial value</strong></label>
+                                    <input class="col-md-7 col-sm-5" id="initialValue" name="initialValue"
+                                           type="number"
+                                           placeholder="10000"
+                                           required="True"/>
+                                </div>
+                                <div class='col-md-4 col-sm-4'>
+                                    <label for="date"><strong>Initial date</strong></label>
+                                    <input type="date" class="col-md-7 input-sm" id="date" name="date"
+                                           size="20"
+                                           required="True"/>
+                                </div>
+                                <div class='col-md-4 col-sm-4'>
+                                    <label for="asset"><strong>Single Asset</strong></label>
+                                    <input class="col-md-7 col-sm-7 input-sm" id="asset" name="asset"
+                                           size="20"
+                                           type="text"
+                                           style="text-transform:uppercase"
+                                           placeholder="SPY"
+                                           title="Ticker of the asset (or select multiple assets below)"
+                                    />
+                                </div>
+                            </div>
+                            <hr>
+
+                            <h6>Multiple Assets</h6>
+
+
+                            <div class='row'>
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="asset2">Asset 1</label>
+                                    <input class="col-md-8 col-sm-8 input-sm" id="asset2" name="asset2"
+                                           size="20"
+                                           type="text"
+                                           style="text-transform:uppercase"
+                                    />
+                                </div>
+
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="weight2">Weight Asset 1</label>
+                                    <input class="col-md-4 col-sm-4 input-sm" id="weight2" name="weight2"
+                                           size="20"
+                                           type="range"
+                                           min="0"
+                                           max="100"
+                                           value="0"
+                                           step="1"
+                                           oninput="amount2.value=weight2.value"/>
+                                    <input id="amount2" type="number" value="0" min="0" max="100"
+                                           oninput="weight2.value=amount2.value"/>
+                                    <span>%</span>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="asset3">Asset 2</label>
+                                    <input class="col-md-8 col-sm-8 input-sm" id="asset3" name="asset3"
+                                           size="20"
+                                           type="text"
+                                           style="text-transform:uppercase"
+                                    />
+                                </div>
+
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="weight3">Weight Asset 2</label>
+                                    <input class="col-md-4 col-sm-4 input-sm" id="weight3" name="weight3"
+                                           size="20"
+                                           type="range"
+                                           min="0"
+                                           max="100"
+                                           value="0"
+                                           step="1"
+                                           oninput="amount3.value=weight3.value"/>
+                                    <input id="amount3" type="number" value="0" min="0" max="100"
+                                           oninput="weight3.value=amount3.value"/>
+                                    <span>%</span>
+                                </div>
+                            </div>
+
+                            <div class='row'>
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="asset4">Asset 3</label>
+                                    <input class="col-md-5 col-sm-5 input-sm" id="asset4" name="asset4"
+                                           size="20"
+                                           type="text"
+                                           style="text-transform:uppercase"
+                                    />
+                                </div>
+
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="weight4">Weight Asset 3</label>
+                                    <input class="col-md-4 col-sm-4 input-sm" id="weight4" name="weight4"
+                                           size="20"
+                                           type="range"
+                                           min="0"
+                                           max="100"
+                                           value="0"
+                                           step="1"
+                                           oninput="amount4.value=weight4.value"/>
+                                    <input id="amount4" type="number" value="0" min="0" max="100"
+                                           oninput="weight4.value=amount4.value"/>
+                                    <span>%</span>
+                                </div>
+                            </div>
+
+
+                            <div class='row'>
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="asset5">Asset 4</label>
+                                    <input class="col-md-5 col-sm-5 input-sm" id="asset5" name="asset5"
+                                           size="20"
+                                           type="text"
+                                           style="text-transform:uppercase"
+                                    />
+                                </div>
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="weight5">Weight Asset 4</label>
+                                    <input class="col-md-4 col-sm-4 input-sm" id="weight5" name="weight5"
+                                           size="20"
+                                           type="range"
+                                           min="0"
+                                           max="100"
+                                           value="0"
+                                           step="1"
+                                           oninput="amount5.value=weight5.value"/>
+                                    <input id="amount5" type="number" value="0" min="0" max="100"
+                                           oninput="weight5.value=amount5.value"/>
+                                    <span>%</span>
+                                </div>
+                            </div>
+
+
+                            <div class='row'>
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="asset6">Asset 5</label>
+                                    <input class="col-md-5 col-sm-5 input-sm" id="asset6" name="asset6"
+                                           size="20"
+                                           type="text"
+                                           style="text-transform:uppercase"
+                                    />
+                                </div>
+
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="weight6">Weight Asset 5</label>
+                                    <input class="col-md-4 col-sm-4 input-sm" id="weight6" name="weight6"
+                                           size="20"
+                                           type="range"
+                                           min="0"
+                                           max="100"
+                                           value="0"
+                                           step="1"
+                                           oninput="amount6.value=weight6.value"/>
+                                    <input id="amount6" type="number" value="0" min="0" max="100"
+                                           oninput="weight6.value=amount6.value"/>
+                                    <span>%</span>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="asset7">Asset 6</label>
+                                    <input class="col-md-5 col-sm-5 input-sm" id="asset7" name="asset7"
+                                           size="20"
+                                           type="text"
+                                           style="text-transform:uppercase"
+                                    />
+                                </div>
+
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="weight7">Weight Asset 6</label>
+                                    <input class="col-md-4 col-sm-4 input-sm" id="weight7" name="weight7"
+                                           size="20"
+                                           type="range"
+                                           min="0"
+                                           max="100"
+                                           value="0"
+                                           step="1"
+                                           oninput="amount7.value=weight7.value"/>
+                                    <input id="amount7" type="number" value="0" min="0" max="100"
+                                           oninput="weight7.value=amount7.value"/>
+                                    <span>%</span>
+                                </div>
+                            </div>
+
+                            <div class='row'>
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="asset8">Asset 7</label>
+                                    <input class="col-md-5 col-sm-5 input-sm" id="asset8" name="asset8"
+                                           size="20"
+                                           type="text"
+                                           style="text-transform:uppercase"
+                                    />
+                                </div>
+
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="weight8">Weight Asset 7</label>
+                                    <input class="col-md-4 col-sm-4 input-sm" id="weight8" name="weight8"
+                                           size="20"
+                                           type="range"
+                                           min="0"
+                                           max="100"
+                                           value="0"
+                                           step="1"
+                                           oninput="amount8.value=weight8.value"/>
+                                    <input id="amount8" type="number" value="0" min="0" max="100"
+                                           oninput="weight8.value=amount8.value"/>
+                                    <span>%</span>
+                                </div>
+                            </div>
+
+
+                            <div class='row'>
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="asset9">Asset 8</label>
+                                    <input class="col-md-5 col-sm-5 input-sm" id="asset9" name="asset9"
+                                           size="20"
+                                           type="text"
+                                           style="text-transform:uppercase"
+                                    />
+                                </div>
+                                <div class='col-md-5 col-sm-5' align="center">
+                                    <label for="weight9">Weight Asset 8</label>
+                                    <input class="col-md-4 col-sm-4 input-sm" id="weight9" name="weight9"
+                                           size="20"
+                                           type="range"
+                                           min="0"
+                                           max="100"
+                                           value="0"
+                                           step="1"
+                                           oninput="amount9.value=weight9.value"/>
+                                    <input id="amount9" type="number" value="0" min="0" max="100"
+                                           oninput="weight9.value=amount9.value"/>
+                                    <span>%</span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class='col-md-12 col-sm-12' align="right">
+
+                                <button class="btn-sm btn-primary mx-3 pull-right" id="submit" align="right"
+                                        onsubmit="return false" onclick="loading()"
+                                        type="submit">
+                                    <i class="fas fa-spinner fa-spin" style="display:none;"></i>
+                                    <span class="btn-text pull-right">Submit</span>
+                                </button>
+                                <input type="reset" class="btn-sm btn-primary pull-right">
+                            </div>
+                            <p>
+
+                            </p>
+                            <br>
+
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </header>
+
+    {% endblock %}
+    {% include "footer.html" %}
+</head>
+</html>

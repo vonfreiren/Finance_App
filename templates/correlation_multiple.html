@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    {% include "navigation.html" %}
+    {% block body %}
+    {% include "header_main.html" %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-md-10 mx-auto">
+                <div class="page-heading">
+                    <div class="container">
+                        <div class="post-heading">
+                            <div class="card-header">
+                                <h2>Correlation Calculation</h2>
+                                <form method="POST">
+                                    <div class="form-group" align="left">
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset"
+                                                name="asset"
+                                                placeholder="GOOGL"
+                                                required="True"
+                                                style="text-transform:uppercase"/>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset2"
+                                                name="asset2"
+                                                placeholder="AMD"
+                                                required="True"
+                                                style="text-transform:uppercase"
+                                        />
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset3"
+                                                name="asset3"
+                                                placeholder="NVDA"
+                                                style="text-transform:uppercase"
+
+                                        />
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset4"
+                                                name="asset4"
+                                                placeholder="T"
+                                                style="text-transform:uppercase"
+
+                                        />
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset5"
+                                                name="asset5"
+                                                placeholder="BAC"
+                                                style="text-transform:uppercase"
+
+                                        />
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset6"
+                                                name="asset6"
+                                                placeholder="TSLA"
+                                                style="text-transform:uppercase"
+
+                                        />
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset7"
+                                                name="asset7"
+                                                placeholder="COIN"
+                                                style="text-transform:uppercase"
+
+                                        />
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset8"
+                                                name="asset8"
+                                                placeholder="AMC"
+                                                style="text-transform:uppercase"
+
+                                        />
+
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset9"
+                                                name="asset9"
+                                                placeholder="CSCO"
+                                                style="text-transform:uppercase"
+
+                                        />
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset10"
+                                                name="asset10"
+                                                placeholder="DOCU"
+                                                style="text-transform:uppercase"
+
+                                        />
+                                    </div>
+
+                                    <br>
+
+                                    <button class="btn-sm btn-primary mx-3 pull-right" id="submit" align="right"
+                                            onsubmit="return false" onclick="loading3()"
+                                            type="submit">
+                                        <i class="fas fa-spinner fa-spin" style="display:none;"></i>
+                                        <span class="btn-text pull-right">Submit</span>
+                                    </button>
+                                    <input type="reset" class="btn-sm btn-primary pull-right">
+                                    <p>
+
+                                    </p>
+                                    <br>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    </div>
+    </div>
+
+    {% endblock %}
+    {% include "footer.html" %}
+</head>
+</html>

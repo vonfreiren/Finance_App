@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<script src="static/assets/scripts.js"></script>
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    {% include "navigation.html" %}
+    {% block body %}
+    {% include "header_main.html" %}
+    <div class="container">
+        <div class="col-lg-10 col-md-10 mx-auto">
+            <div class="page-heading">
+                <div class="container">
+                    <div class="post-heading">
+                        <div class="card-header">
+                            <h2>Portfolio Optimization</h2>
+                            <form method="POST" name="form_opti">
+                                <div class='row'>
+                                    <div class='col-md-4 col-sm-4'>
+                                        <label for="initialValue2">Initial value</label>
+                                        <input class="form-control" id="initialValue2" name="initialValue2"
+                                               type="number"
+                                               placeholder="10000"
+                                               required="True"/>
+                                    </div>
+                                    <div class='col-md-4 col-sm-4'>
+                                        <label for="calculation_method">Method
+                                        </label><SELECT class="form-control" id="calculation_method"
+                                                        name="calculation_method" type="" text>
+                                        {% for c in calculation_methods %}
+                                        <li class="dropdown-item-text">
+                                            <OPTION value={{c}}> {{c}}</option>
+                                        </li>
+                                        {% endfor %}
+                                    </SELECT>
+                                    </div>
+                                    <div class='col-md-4 col-sm-4'>
+                                        <label for="risk">Expected Volatility</label>
+                                        <input
+                                                type="number"
+                                                class="form-control"
+                                                id="risk"
+                                                name="initialValue"
+                                                placeholder="0.15"
+                                                step="0.01"
+                                        />
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="overlay"></div>
+
+                                <div class='row'>
+                                    <div class='col-md-4 col-sm-4'>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset"
+                                                name="asset"
+                                                placeholder="AAPL"
+                                                required="True"
+                                                style="text-transform:uppercase"
+                                        />
+                                    </div>
+
+                                    <div class='col-md-4 col-sm-4'>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset2"
+                                                name="asset2"
+                                                placeholder="NIO"
+                                                required="True"
+                                                style="text-transform:uppercase"
+                                        />
+                                    </div>
+                                    <div class='col-md-4 col-sm-4'>
+
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset3"
+                                                name="asset3"
+                                                placeholder="VOO"
+                                                style="text-transform:uppercase"
+
+                                        />
+                                    </div>
+                                </div>
+
+
+                                <div class='row'>
+                                    <div class='col-md-4 col-sm-4'>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset4"
+                                                name="asset4"
+                                                placeholder="F"
+                                                style="text-transform:uppercase"
+                                        />
+                                    </div>
+
+                                    <div class='col-md-4 col-sm-4'>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset5"
+                                                name="asset5"
+                                                placeholder="NU"
+                                                style="text-transform:uppercase"
+                                        />
+                                    </div>
+                                    <div class='col-md-4 col-sm-4'>
+
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset6"
+                                                name="asset6"
+                                                placeholder="SOFI"
+                                                style="text-transform:uppercase"
+
+                                        />
+                                    </div>
+                                </div>
+
+
+                                <div class='row'>
+                                    <div class='col-md-4 col-sm-4'>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset7"
+                                                name="asset7"
+                                                placeholder="CCL"
+                                                style="text-transform:uppercase"
+                                        />
+                                    </div>
+
+                                    <div class='col-md-4 col-sm-4'>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset8"
+                                                name="asset8"
+                                                placeholder="SIRI"
+                                                style="text-transform:uppercase"
+                                        />
+                                    </div>
+                                    <div class='col-md-4 col-sm-4'>
+
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset9"
+                                                name="asset9"
+                                                placeholder="MSFT"
+                                                style="text-transform:uppercase"
+
+                                        />
+                                    </div>
+                                </div>
+
+
+                                <div class='row'>
+                                    <div class='col-md-4 col-sm-4'>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset10"
+                                                name="asset10"
+                                                placeholder="GSK.L"
+                                                style="text-transform:uppercase"
+                                        />
+                                    </div>
+
+                                    <div class='col-md-4 col-sm-4'>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset11"
+                                                name="asset11"
+                                                placeholder="UBSG.SW"
+                                                style="text-transform:uppercase"
+                                        />
+                                    </div>
+                                    <div class='col-md-4 col-sm-4'>
+
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset12"
+                                                name="asset12"
+                                                placeholder="ENI.MI"
+                                                style="text-transform:uppercase"
+
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class='row'>
+                                    <div class='col-md-4 col-sm-4'>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset13"
+                                                name="asset13"
+                                                placeholder="ORAN.PA"
+                                                style="text-transform:uppercase"
+                                        />
+                                    </div>
+
+                                    <div class='col-md-4 col-sm-4'>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset14"
+                                                name="asset14"
+                                                placeholder="ENGIE.PA"
+                                                style="text-transform:uppercase"
+                                        />
+                                    </div>
+                                    <div class='col-md-4 col-sm-4'>
+
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="asset15"
+                                                name="asset15"
+                                                placeholder="NG.L"
+                                                style="text-transform:uppercase"
+
+                                        />
+                                    </div>
+                                </div>
+
+                                <br>
+
+                                <button class="btn-sm btn-primary mx-3 pull-right" id="submit" align="right"
+                                        onsubmit="return false" onclick="loading2()"
+                                        type="submit">
+                                    <i class="fas fa-spinner fa-spin" style="display:none;"></i>
+                                    <span class="btn-text pull-right">Submit</span>
+                                </button>
+                                <input type="reset" class="btn-sm btn-primary pull-right">
+                                <p>
+
+                                </p>
+                                <br>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+    </div>
+    </div>
+    </div>
+    </header>
+
+    {% endblock %}
+    {% include "footer.html" %}
+</head>
+
+</html>

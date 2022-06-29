@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    {% include "navigation.html" %}
+    {% block body %}
+    {% include "header_main.html" %}
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="page-heading">
+                    <h4>{{asset}} | Dividends</h4>
+                    <h5>Average dividend: {{mean}}</h5>
+                    <h6>Last 5 dividends</h6>
+                    {{last_5 | safe}}
+                    <form method="POST">
+                                <img class="img-fluid" src="data:image/png;base64, {{ plot_url }}" , align="center">
+                        <br>
+                        <button type="submit" class="btn-sm btn-primary">Calculate Again</button>
+                        <br>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    {% endblock %}
+    {% include "footer.html" %}
+</head>
+</html>
