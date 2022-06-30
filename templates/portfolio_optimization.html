@@ -36,15 +36,20 @@
                                     </SELECT>
                                     </div>
                                     <div class='col-md-4 col-sm-4'>
-                                        <label for="risk">Expected Volatility</label>
-                                        <input
-                                                type="number"
-                                                class="form-control"
-                                                id="risk"
-                                                name="initialValue"
-                                                placeholder="0.15"
-                                                step="0.01"
-                                        />
+                                        <label for="risk">Volatility</label>
+                                        <input class="col-md-3 col-sm-3 input-sm" id="risk" name="risk"
+                                               size="10"
+                                               type="range"
+                                               min="0"
+                                               max="100"
+                                               value="0"
+                                               step="1"
+                                               oninput="risk_amount.value=risk.value"/>
+                                            <input id="risk_amount" type="number" value="0" min="0" max="100"
+                                                   name="risk_amount"
+                                                   oninput="risk.value=risk_amount.value"/>
+                                            <span>%</span>
+
                                     </div>
                                 </div>
                                 <hr>

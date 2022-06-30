@@ -7,6 +7,7 @@ matplotlib.use('Agg')
 from yahoo_fin import stock_info as si
 from feed_security_data import preDownloadSecurityDB
 from parse_csv_tickers import parse_csv_symbols_country
+from crypto import retrieve_crypto
 
 df1 = pd.DataFrame()
 df2 = pd.DataFrame()
@@ -26,6 +27,7 @@ df15 = pd.DataFrame()
 df16 = pd.DataFrame()
 df17 = pd.DataFrame()
 df18 = pd.DataFrame()
+df19 = pd.DataFrame()
 
 def fetch_symbols():
     start_date = datetime.today() - timedelta(3)
@@ -136,10 +138,18 @@ def fetch_symbols():
 
     try:
         df18 = pd.read_pickle('../tickers/hsi')
-
     except:
         df18 = pd.DataFrame(parse_csv_symbols_country('tickers/hsi'))
         df18.to_pickle('tickers/hsi')
+
+    try:
+        df19 = pd.read_pickle('../tickers/crypto')
+    except:
+        df19 = pd.DataFrame(retrieve_crypto())
+        df19.to_pickle('tickers/crypto')
+
+
+    calculate_differences(df19)
 
 def calculate_differences(df):
     start_date = datetime.today() - timedelta(4)
@@ -149,7 +159,7 @@ def calculate_differences(df):
     for symbol in df.values.tolist():
         a = datetime.now()
         symbol = str(symbol)[2:-2]
-        data = yf.download(symbol, start_date, end_date, interval="1m")
+        data = yf.download(symbol, start_date, end_date, interval="30m")
         if data.empty:
              print("No data for " + symbol)
         else:

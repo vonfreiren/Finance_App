@@ -1,7 +1,7 @@
 
 import matplotlib
 
-import constants
+from auxiliar import constants
 
 matplotlib.use('Agg')
 import yfinance as yf
@@ -45,7 +45,7 @@ def optimize(assetList, initialValue, calculation_method, risk):
 
 
     ef = EfficientFrontier(mu, S)
-    if(calculation_method==constants.SHARPE_RATIO):
+    if(calculation_method== constants.SHARPE_RATIO):
         weights = ef.max_sharpe()
     elif (calculation_method == constants.MIN_VOLATILITY):
             weights = ef.min_volatility()
@@ -72,6 +72,21 @@ def optimize(assetList, initialValue, calculation_method, risk):
     da = DiscreteAllocation(weights, latest_prices, total_portfolio_value=initialValue)
 
     allocation, leftover = da.greedy_portfolio()
+
+    df2 = pd.DataFrame(allocation, index=[0])
+    df3 = df2
+    for column in df2:
+        df3[column] = df[column].values[-1] * df2[column]
+
+
+    print(df3.iloc[0])
+    values = df2.values.flatten()
+    img = io.BytesIO()
+    fig, ax = plt.subplots()
+    sns.set_style("darkgrid")
+
+    ax = sns.barplot(x= df2.columns,y=values)
+
 
     df = pd.DataFrame(allocation, index=[0])
     for price in latest_prices:
@@ -118,7 +133,8 @@ def adapt_risk(risk):
         if risk > 1:
             risk = risk / 100
         else:
-            risk = 0.1
+            risk = risk
+
     return risk
 
 

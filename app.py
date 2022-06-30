@@ -5,7 +5,7 @@ from datetime import datetime
 import numpy as np
 import matplotlib
 
-import constants
+from auxiliar import constants
 
 matplotlib.use('Agg')
 from flask_sqlalchemy import SQLAlchemy
@@ -246,7 +246,7 @@ def correlation_multiple():
         plot_url, missingData, missing_ticker = calculation_multiple(assetList)
 
         if missingData:
-            flash(constants.MISSING_DATA_TICKER+":"+missing_ticker, constants.FLASH_DANGER_CATEGORY)
+            flash(constants.MISSING_DATA_TICKER + ":" + missing_ticker, constants.FLASH_DANGER_CATEGORY)
         else:
             if (len(assetList) > 1 and assetList):
                 return render_template("correlation_mulres.html", plot_url=plot_url.decode('utf8'))
@@ -281,7 +281,7 @@ def correlation():
                 alpha, beta, plot_url = correlation_two(asset, asset2, log_returns)
 
             if missingData:
-                flash(constants.MISSING_DATA_TICKER+":"+missing_ticker, category=constants.FLASH_DANGER_CATEGORY)
+                flash(constants.MISSING_DATA_TICKER + ":" + missing_ticker, category=constants.FLASH_DANGER_CATEGORY)
             else:
                 if asset and asset2:
                     return render_template("correlation_res.html", asset=asset, name=assetName, asset2=asset2,
@@ -327,7 +327,7 @@ def autocomplete():
     search = request.args.get('q')
     results = []
     query1 = db.session.query(Security.ticker, Security.name).filter(Security.name.like('%' + str(search) + '%'))
-    query2 =  db.session.query(Security.ticker, Security.name).filter(Security.ticker.like(str(search) + '%'))
+    query2 = db.session.query(Security.ticker, Security.name).filter(Security.ticker.like('%' + str(search) + '%'))
     query = query1.union(query2)
     for mv in query.all():
         results.append(mv[0]+" - "+mv[1])
