@@ -13,8 +13,7 @@ import re
 
 def retrieve_crypto():
     cryptoList = []
-    currency = 'USD'
-    URL = 'https://coinmarketcap.com/'
+    URL = 'https://www.morningstar.com/search?query=VEUR/'
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
@@ -22,11 +21,11 @@ def retrieve_crypto():
     soup = BeautifulSoup(page.text, 'html.parser')
     crypto_symbols = soup.find_all("span", {"class": "crypto-symbol"})
     for symbol in crypto_symbols:
-        cryptoList.append(symbol.text+"-"+currency)
+        cryptoList.append(symbol.text+"-")
     for span in crypto_symbols:
         price = span.find_next("span").text
         print(price)
     return cryptoList
 
-
+retrieve_crypto()
 

@@ -7,7 +7,7 @@ matplotlib.use('Agg')
 from yahoo_fin import stock_info as si
 from feed_security_data import preDownloadSecurityDB
 from parse_csv_tickers import parse_csv_symbols_country
-from crypto import retrieve_crypto
+from retrieve_crypto import retrieve_crypto
 
 df1 = pd.DataFrame()
 df2 = pd.DataFrame()
@@ -159,7 +159,7 @@ def calculate_differences(df):
     for symbol in df.values.tolist():
         a = datetime.now()
         symbol = str(symbol)[2:-2]
-        data = yf.download(symbol, start_date, end_date, interval="30m")
+        data = yf.download(symbol, start_date, end_date, interval="1h")
         if data.empty:
              print("No data for " + symbol)
         else:

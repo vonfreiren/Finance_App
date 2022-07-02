@@ -11,6 +11,7 @@ from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 from flask_datepicker import datepicker
 import yfinance as yf
+import datetime
 
 
 app = Flask(__name__)
@@ -22,6 +23,7 @@ app.config['SECRET_KEY'] = '#$%^&*tmtkttktktkt'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///security.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 
@@ -37,6 +39,7 @@ class Security(db.Model):
     category = db.Column(db.String(100), unique=False, nullable=True)
     morningstar_rating = db.Column(db.String(100), unique=False, nullable=True)
     isin = db.Column(db.String(100), unique=False, nullable=True)
+    create_date = db.Column(db.Date(), unique=False, nullable=True)
 
     def __repr__(self):
         return '<Security %r>' % self.name
@@ -64,7 +67,7 @@ def insertSecurityDB(asset, assetName, quoteType, exchange, market, currency, yi
                      morningStarRiskRating):
     security = Security(ticker=asset, name=assetName, asset_type=quoteType, exchange=exchange, market=market,
                         currency=currency, yield_amount=yield_amount, category=category,
-                        morningstar_rating=morningStarRiskRating, isin="")
+                        morningstar_rating=morningStarRiskRating, isin="", create_date=datetime.datetime.now())
     db.session.add(security)
     db.session.commit()
 

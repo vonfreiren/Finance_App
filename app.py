@@ -62,6 +62,7 @@ class Security(db.Model):
     category = db.Column(db.String(100), unique=False, nullable=True)
     morningstar_rating = db.Column(db.String(100), unique=False, nullable=True)
     isin = db.Column(db.String(100), unique=False, nullable=True)
+    create_date = db.Column(db.Date(), unique=False, nullable=True)
 
     def __repr__(self):
         return '<Security %r>' % self.name
@@ -193,10 +194,10 @@ def portfolio_value():
     weightList = []
     if request.method == 'POST':
         stock = request.form.get('asset')
-        stock = stock.split(' ')[0]
         session['startdate'] = request.form.get('date')
         initialValue = request.form.get('initialValue')
         if stock:
+            stock = stock.split(' ')[0]
             assetList.append(stock)
             weightList.append(1)
             initialValue = float(initialValue)
