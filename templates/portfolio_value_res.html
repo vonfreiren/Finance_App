@@ -1,42 +1,49 @@
 <!DOCTYPE html>
-<html>
+<body>
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>
     {% include "navigation.html" %}
     {% block body %}
     {% include "header_main.html" %}
+</head>
+<body>
 
 
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 mx-auto">
-                <div class="page-heading">
-                    <div class="container">
-                        <div class="post-heading">
-                            <h3>Portfolio Value</h3>
-                            <p>Initial Value: <strong>{{initialValue}}</strong> |
-                                Final Value: <strong>{{finalValue}}</strong></p>
-                            <p>Total Return: <strong>{{total_return}}</strong> | Annualized Return:
-                                <strong>{{annualized_return}}</strong></p>
-                            <form method="POST">
-                                <img class="img-fluid"
-                                     src="data:image/png;base64, {{ plot_url }}" ,
-                                     align="center">
-                                <br/>
-                                <button type="submit" class="btn-sm btn-primary">Calculate Again</button>
-                                <br>
-                            </form>
-                        </div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 mx-auto">
+            <div class="page-heading">
+                <div class="container">
+                    <div class="post-heading">
+                        <h3>Portfolio Value</h3>
+                        <p>Initial Value: <strong>{{initialValue}}</strong> |
+                            Final Value: <strong>{{finalValue}}</strong></p>
+                        <p>Total Return: <strong>{{total_return}}</strong> | Annualized Return:
+                            <strong>{{annualized_return}}</strong></p>
+
+
+                        <form method="POST">
+
+                            <img class="img-fluid"
+                                 src="data:image/png;base64, {{ plot_url }}" ,
+                                 align="center">
+                            <br/>
+                            <button type="submit" class="btn-sm btn-primary">Calculate Again</button>
+                            <br>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    </div>
+</div>
+</div>
+</div>
+</body>
 
-    {% endblock %}
-    {% include "footer.html" %}
-</head>
+
+{% endblock %}
+{% include "footer.html" %}
 </html>

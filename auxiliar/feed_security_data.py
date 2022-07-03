@@ -1,18 +1,13 @@
-
 import matplotlib
-
-
 
 matplotlib.use('Agg')
 
 from flask_sqlalchemy import SQLAlchemy
 
-from flask import Flask, render_template
+from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_datepicker import datepicker
 import yfinance as yf
-import datetime
-
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -39,7 +34,6 @@ class Security(db.Model):
     category = db.Column(db.String(100), unique=False, nullable=True)
     morningstar_rating = db.Column(db.String(100), unique=False, nullable=True)
     isin = db.Column(db.String(100), unique=False, nullable=True)
-    create_date = db.Column(db.Date(), unique=False, nullable=True)
 
     def __repr__(self):
         return '<Security %r>' % self.name
@@ -63,11 +57,16 @@ def retrieveSecurityDB(asset):
     return security
 
 
+def retrieveFunds():
+    funds = db.session.query(Security.ticker).filter_by(asset_type='ETF').all()
+    return [fund[0] for fund in funds]
+
+
 def insertSecurityDB(asset, assetName, quoteType, exchange, market, currency, yield_amount, category,
                      morningStarRiskRating):
     security = Security(ticker=asset, name=assetName, asset_type=quoteType, exchange=exchange, market=market,
                         currency=currency, yield_amount=yield_amount, category=category,
-                        morningstar_rating=morningStarRiskRating, isin="", create_date=datetime.datetime.now())
+                        morningstar_rating=morningStarRiskRating, isin="")
     db.session.add(security)
     db.session.commit()
 
@@ -93,6 +92,3 @@ def retrieveAssetName(ticker):
         morningStarRiskRating = None
 
     return shortName, quoteType, exchange, market, currency, yield_amount, category, morningStarRiskRating
-
-
-

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0"></script>
+
+    {% include "navigation.html" %}
+    {% block body %}
+    {% include "header_main.html" %}
+</head>
+<body>
+
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="page-heading">
+                    <h4>{{asset}} | Dividends</h4>
+                    <h6>Last 5 dividends</h6>
+
+                                                                                            <canvas id="chart-line" width="900" height="400"></canvas>
+                          <script>
+                    var test = [
+  { x: "2022-1-8", y: 950 },
+  { x: "2022-1-9", y: 1100 },
+  { x: "2022-1-10", y: 990 },
+  { x: "2022-1-12", y: 1250 },
+  { x: "2022-1-13", y: 1050 }
+];
+
+                    var data = {{values_list | safe}};
+                                        var funds = {{labels_list | safe}};
+
+                                        let options = {
+                                                    elements: {
+          point:{
+              radius : customRadius,
+              display : true
+          }
+        },
+    plugins: {
+        tooltip: {
+            callbacks: {
+                label: (context) => {
+                    console.log(context.raw.z)
+                    return context.raw.z
+                }
+            }
+        }
+    }
+}
+
+  function customRadius( context )
+  {
+    let index = context.dataIndex;
+    let value = context.dataset.data[ index ];
+    return index === 0 || value >= 100 ?
+           10 :
+           2;
+  }
+
+
+var chart = new Chart('chart-line', {
+  type: 'scatter',
+  labels: funds,
+    funds,
+  data: {
+    datasets: [{
+      data: data,
+      label: funds,
+      borderColor: "#3e95cd"
+    }]
+  },
+options:options});
+                            </script>
+
+
+                    <form method="POST">
+                                <img class="img-fluid" src="data:image/png;base64, {{ plot_url }}" , align="center">
+                        <br>
+                        <button type="submit" class="btn-sm btn-primary">Calculate Again</button>
+                        <br>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    {% endblock %}
+    {% include "footer.html" %}
+</body>
+</html>

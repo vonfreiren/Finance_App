@@ -69,6 +69,15 @@ def calculate_portfolio(assetList, weightList, initialValue, startDate):
     lastDay = datetime.today().date()
     startDate  = datetime.strptime(startDate, '%Y-%m-%d').date()
 
+    values = aggregated.values.tolist()
+    values = [row[0] for row in values]
+    list_lists = []
+    labels = aggregated.index.values.tolist()
+    labels = pd.to_datetime(aggregated.index).strftime('%Y-%m-%d').tolist()
+    for column in aggregated.columns:
+        list_lists.append(aggregated[column].values.tolist())
+
+
     years = (lastDay - startDate).days / 365.25
     annualized_return = total_return / years
 

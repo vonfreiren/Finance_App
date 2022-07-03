@@ -1,15 +1,6 @@
-
-
-from flask_sqlalchemy import SQLAlchemy
-
-from flask import Flask, render_template
-from flask_bootstrap import Bootstrap
-from flask_datepicker import datepicker
-import yfinance as yf
 import requests
-import urllib.request
 from bs4 import BeautifulSoup
-import re
+
 
 def retrieve_crypto():
     cryptoList = []
@@ -21,11 +12,11 @@ def retrieve_crypto():
     soup = BeautifulSoup(page.text, 'html.parser')
     crypto_symbols = soup.find_all("span", {"class": "crypto-symbol"})
     for symbol in crypto_symbols:
-        cryptoList.append(symbol.text+"-")
+        cryptoList.append(symbol.text + "-")
     for span in crypto_symbols:
         price = span.find_next("span").text
         print(price)
     return cryptoList
 
-retrieve_crypto()
 
+retrieve_crypto()

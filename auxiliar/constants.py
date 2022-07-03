@@ -2,18 +2,13 @@ MISSING_DATA_TICKER = "There is missing data for one of the Tickers. Please chec
 WRONG_WEIGHTS_PORTFOLIO_CALCULATIONS = "The weights of the portfolio calculation must make 100%"
 WRONG_WEIGHTS_ASSETS_NUMBER = "The number of assets and weights must be the same"
 
-
-#Flash
+# Flash
 FLASH_INFO_CATEGORY = 'error'
 FLASH_DANGER_CATEGORY = 'danger'
 FLASH_SUCCESS_CATEGORY = 'success'
 FLASH_WARNING_CATEGORY = 'warning'
 
-
-
-
-
-#Portfolio Optimization
+# Portfolio Optimization
 SHARPE_RATIO = "Sharpe_Ratio"
 MIN_VOLATILITY = "Minimum_Volatility"
 MAX_RETURN = "Maximum_Return"

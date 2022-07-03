@@ -23,12 +23,13 @@ def optimize(assetList, initialValue, calculation_method, risk):
     endDate = datetime.today().strftime('%Y-%m-%d')
     df = pd.DataFrame()
     missing_data = False
-
+    values_list = []
+    labels_list = []
     for asset in assetList:
         data = yf.download(asset, '2000-01-01', endDate)
         if(data.empty):
             missing_data = True
-            return None, None, None, None, None, missing_data
+            return None, None, None, None, None, missing_data, None, None
 
         name = preDownloadSecurityDB(asset)
         df[name] = data['Close']
@@ -99,7 +100,6 @@ def optimize(assetList, initialValue, calculation_method, risk):
     img = io.BytesIO()
     fig, ax = plt.subplots(figsize=(14,10), dpi=120)
     sns.set_style("darkgrid")
-    print(df)
 
     ax = sns.barplot(x= df.columns,y=values)
     #ax = df.plot(kind="bar", stacked=False)
@@ -115,6 +115,7 @@ def optimize(assetList, initialValue, calculation_method, risk):
 
     ax2 = plt.pie(df3.iloc[0], labels=df3.columns, autopct='%.0f%%', pctdistance=0.4, labeldistance=0.5, rotatelabels=False)
     plt.savefig(img2, format='png')
+    labels = df3.columns
     img2.seek(0)
     plot_url_2 = base64.b64encode(img2.getvalue())
 
@@ -123,9 +124,13 @@ def optimize(assetList, initialValue, calculation_method, risk):
 
     for k, v in df3.items():
         print(v[0])
+        values_list.append((v[0]))
+        labels_list.append(k)
         df3[k] = np.array(v[0])
 
-    return plot_url_2, allocation, df2, df3, leftover, missing_data
+    values_list = ['%.2f' % value for value in values_list]
+
+    return plot_url_2, allocation, df2, df3, leftover, missing_data, values_list, labels_list
 
 def adapt_risk(risk):
     if risk:

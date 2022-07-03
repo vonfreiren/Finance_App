@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>
     {% include "navigation.html" %}
     {% block body %}
     {% include "header_main.html" %}
@@ -16,6 +17,25 @@
                     <h5>Average dividend: {{mean}}</h5>
                     <h6>Last 5 dividends</h6>
                     {{last_5 | safe}}
+                                                                        <canvas id="lineChart" width="900" height="400"></canvas>
+                          <script>
+                                var ctx = document.getElementById('lineChart').getContext('2d');
+                                var lineChart = new Chart(ctx, {
+                                    type: "line",
+                                    data: {
+                                        labels:
+                                            {{ labels | safe }},
+                                datasets: [
+                                    {
+                                        label: "Value",
+                                        data: {{ values | safe }},
+                                fill: false,
+                                    lineTension: 0.1
+                                }
+                                ]
+                                }
+                                });
+                            </script>
                     <form method="POST">
                                 <img class="img-fluid" src="data:image/png;base64, {{ plot_url }}" , align="center">
                         <br>

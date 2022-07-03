@@ -1,8 +1,9 @@
-
-import yfinance as yf
-import pandas as pd
 from datetime import datetime, timedelta
+
 import matplotlib
+import pandas as pd
+import yfinance as yf
+
 matplotlib.use('Agg')
 from yahoo_fin import stock_info as si
 from feed_security_data import preDownloadSecurityDB
@@ -28,6 +29,7 @@ df16 = pd.DataFrame()
 df17 = pd.DataFrame()
 df18 = pd.DataFrame()
 df19 = pd.DataFrame()
+
 
 def fetch_symbols():
     start_date = datetime.today() - timedelta(3)
@@ -148,8 +150,8 @@ def fetch_symbols():
         df19 = pd.DataFrame(retrieve_crypto())
         df19.to_pickle('tickers/crypto')
 
-
     calculate_differences(df19)
+
 
 def calculate_differences(df):
     start_date = datetime.today() - timedelta(4)
@@ -161,7 +163,7 @@ def calculate_differences(df):
         symbol = str(symbol)[2:-2]
         data = yf.download(symbol, start_date, end_date, interval="1h")
         if data.empty:
-             print("No data for " + symbol)
+            print("No data for " + symbol)
         else:
             try:
                 previous_day = pd.to_datetime(data.index[-1]).to_pydatetime() - timedelta(1)
@@ -175,7 +177,7 @@ def calculate_differences(df):
                 delta = b - a
                 print(delta.total_seconds())
             except:
-                print("No data found for "+symbol)
+                print("No data found for " + symbol)
     return df2
 
 

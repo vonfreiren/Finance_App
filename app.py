@@ -13,6 +13,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_assets import Environment, Bundle
 from calculations.montecarlo.montecarlo_calculation import calculation
 from calculations.correlation.correlation_calculation import calculation_multiple, correlation_two
+from calculations.correlation.fund_comparator import calculate_funds
 from calculations.timevalue.portfolio_calculation import calculate_portfolio
 from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
@@ -25,7 +26,7 @@ from calculations.timevalue.calculate_worst_best_days import calculate_worst_bes
 from auxiliar.feed_security_data import preDownloadSecurityDB
 from tasks import make_celery
 from calculations.dividends.dividends import retrieve_dividends
-
+import  random
 app = Flask(__name__, static_url_path='/static/assets', static_folder='static/assets')
 app.config.update(CELERY_CONFIG={
     'broker_url': 'redis://localhost:6379',
@@ -62,7 +63,6 @@ class Security(db.Model):
     category = db.Column(db.String(100), unique=False, nullable=True)
     morningstar_rating = db.Column(db.String(100), unique=False, nullable=True)
     isin = db.Column(db.String(100), unique=False, nullable=True)
-    create_date = db.Column(db.Date(), unique=False, nullable=True)
 
     def __repr__(self):
         return '<Security %r>' % self.name
@@ -127,14 +127,30 @@ def dividends():
         asset = request.form.get('asset')
         if (asset):
             asset = asset.split(' ')[0]
-            plot_url, missing_data, mean, last_5 = retrieve_dividends(asset)
+            plot_url, missing_data, mean, last_5, values, labels = retrieve_dividends(asset)
             if missing_data:
                 flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
             else:
                 if (asset):
-                    return render_template("dividends_results.html", asset=asset, plot_url=plot_url.decode('utf8'), mean=mean, last_5=last_5.to_html(classes=["table-bordered", "table-striped", "table-hover"]).replace('<tr>','<tr style="text-align: right;">'))
+                    return render_template("dividends_results.html", asset=asset, plot_url=plot_url.decode('utf8'), mean=mean, last_5=last_5.to_html(classes=["table-bordered", "table-striped", "table-hover"]).replace('<tr>','<tr style="text-align: right;">'), values=values, labels=labels)
 
     return render_template("dividends.html")
+
+
+@app.route('/funds_comparator', methods=['GET', 'POST'])
+def compare_fund():
+    if request.method == 'POST':
+        asset = request.form.get('asset')
+        if (asset):
+            asset = asset.split(' ')[0]
+            plot_url, missing_data, asset, std_3, return_3, values_list, labels_list = calculate_funds(asset)
+            if missing_data:
+                flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
+            else:
+                if (asset):
+                    return render_template("funds_results.html", asset=asset, plot_url=plot_url.decode('utf8'), std_3=std_3, return_3=return_3, values_list=values_list, labels_list = labels_list)
+
+    return render_template("funds.html")
 
 
 @app.route('/asset_worst_best', methods=['GET', 'POST'])
@@ -157,6 +173,17 @@ def asset_worst_best():
 
 @app.route('/portfolio_optimization', methods=['GET', 'POST'])
 def portfolio_optimization():
+
+
+    colors = []
+
+    for x in range(0, 15):
+        hexadecimal = ["#" + ''.join([random.choice('ABCDEF0123456789') for i in range(6)])]
+        print(x)
+        colors.append(hexadecimal)
+
+    print(colors)
+
     calculation_methods = constants.CALCULATION_METHODS
     assetList = []
     if request.method == 'POST':
@@ -169,14 +196,14 @@ def portfolio_optimization():
             calculation_method = request.form.get('calculation_method')
             risk = request.form.get('risk')
         if (len(assetList) > 1 and assetList):
-            plot_url, opt_values, df, df2, moneyLeft, missingData = optimize(assetList, initial_value, calculation_method, risk)
+            plot_url, opt_values, df, df2, moneyLeft, missingData, values, labels = optimize(assetList, initial_value, calculation_method, risk)
             if missingData:
                 flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
             else:
                 if (len(assetList) > 1 and assetList):
                     return render_template("portfolio_optimization_res.html", plot_url=plot_url.decode('utf8'),
                                            optValues=opt_values, name="Opti", df=df.to_html(), df2=df2, calculation_methods=calculation_methods, moneyLeft=moneyLeft,
-                                           initialValue=f'{initial_value:,}')
+                                           initialValue=f'{initial_value:,}', values=values, labels=labels, colors=colors)
 
     return render_template("portfolio_optimization.html", calculation_methods=calculation_methods)
 
@@ -207,7 +234,7 @@ def portfolio_value():
                 flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
             else:
                 return render_template("portfolio_value_res.html", plot_url=plot_url.decode('utf8'),
-                                       initialValue=f'{initialValue:,}', finalValue=f'{finalValue:,}', total_return="{0:.0%}".format(total_return), annualized_return="{0:.0%}".format(annualized_return) )
+                                       initialValue=f'{initialValue:,}', finalValue=f'{finalValue:,}', total_return="{0:.0%}".format(total_return), annualized_return="{0:.0%}".format(annualized_return))
         else:
             for value in request.form.items():
                 if ("asset" in value[0] and value[1]):
@@ -233,6 +260,8 @@ def portfolio_value():
             else:
                 flash(constants.WRONG_WEIGHTS_ASSETS_NUMBER, constants.FLASH_DANGER_CATEGORY)
     return render_template("portfolio_value.html")
+
+
 
 
 @app.route('/correlation_multiple', methods=['GET', 'POST'])
@@ -265,11 +294,12 @@ def correlation():
     if request.method == 'POST':
         asset = request.form.get('asset')
         asset2 = request.form.get('asset2')
-        asset = asset.split(' ')[0]
-        asset2 = asset2.split(' ')[0]
-        assetList.append(asset)
-        assetList.append(asset2)
-        if (asset and asset2 and len(assetList) > 1):
+
+        if (asset and asset2):
+            asset = asset.split(' ')[0]
+            asset2 = asset2.split(' ')[0]
+            assetList.append(asset)
+            assetList.append(asset2)
             log_returns, missingData, missing_ticker = fetchData(assetList)
             if (missingData != True):
                 for item, instrument in enumerate(assetList):
