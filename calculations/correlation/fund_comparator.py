@@ -10,7 +10,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 import seaborn as sns
-from auxiliar.feed_security_data import retrieveFunds
+from auxiliar.feed_security_data import retrieveFunds, retrieveSecurityDB
 
 
 def calculate_funds(asset):
@@ -24,6 +24,8 @@ def calculate_funds(asset):
     funds_list = funds_list + retrieveFunds()
     print(funds_list)
     funds_list = list(set(funds_list))
+    funds_list.remove(asset)
+    funds_list.insert(0, asset)
     print(funds_list)
 
     start_date = datetime.today() - relativedelta(years=3)
@@ -37,12 +39,22 @@ def calculate_funds(asset):
             missingData = True
             return None, missingData, asset, None, None
 
+
+        security = retrieveSecurityDB(fund)
+        if (security is not None):
+            fund = security.name
+
+
         start_price = data.Close[0]
         end_price = data.Close[-1]
         return_3 = (end_price - start_price) / start_price * 100 / 3
         std_3 = data['Close'].std() / 3
         df2 = pd.DataFrame({'Return_3': return_3, 'Std_3': std_3}, index=[fund])
         df = df.append(df2, ignore_index=False)
+
+    security = retrieveSecurityDB(asset)
+    if (security is not None):
+        asset = security.name
 
     fig, ax = plt.subplots()
     print(df2)
@@ -52,6 +64,8 @@ def calculate_funds(asset):
 
     values_list = []
     labels_list = []
+    pd.options.display.float_format = '{:.2f}'.format
+
     for idx, row in df.iterrows():
         d = {'x': row['Return_3']}
         d['y'] = row['Std_3']

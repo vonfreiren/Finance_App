@@ -19,26 +19,35 @@
         <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto">
                 <div class="page-heading">
-                    <h4>{{asset}} | Dividends</h4>
-                    <h6>Last 5 dividends</h6>
+                    <h4 align="center">{{asset}} | Risk</h4>
+                    <h6 align="center">Risk Comparator</h6>
 
                                                                                             <canvas id="chart-line" width="900" height="400"></canvas>
                           <script>
-                    var test = [
-  { x: "2022-1-8", y: 950 },
-  { x: "2022-1-9", y: 1100 },
-  { x: "2022-1-10", y: 990 },
-  { x: "2022-1-12", y: 1250 },
-  { x: "2022-1-13", y: 1050 }
-];
 
                     var data = {{values_list | safe}};
                                         var funds = {{labels_list | safe}};
 
                                         let options = {
+  scales: {
+    y: {
+      title: {
+        display: true,
+        text: 'Standard Deviation (3 Years)'
+      }
+    },
+          x: {
+      title: {
+        display: true,
+        text: 'Return (3 Years)'
+      }
+    }
+  },
+
                                                     elements: {
           point:{
               radius : customRadius,
+              color: customColor,
               display : true
           }
         },
@@ -47,7 +56,7 @@
             callbacks: {
                 label: (context) => {
                     console.log(context.raw.z)
-                    return context.raw.z
+                    return [context.raw.z, "Return: "+context.raw.x, "Standard Deviation: "+context.raw.y]
                 }
             }
         }
@@ -59,9 +68,19 @@
     let index = context.dataIndex;
     let value = context.dataset.data[ index ];
     return index === 0 || value >= 100 ?
-           10 :
-           2;
+           6 :
+           3;
   }
+
+    function customColor( context )
+  {
+    let index = context.dataIndex;
+    let value = context.dataset.data[ index ];
+    return index === 0 || value >= 100 ?
+            'green' :
+           'blue' ;
+  }
+
 
 
 var chart = new Chart('chart-line', {
@@ -72,6 +91,7 @@ var chart = new Chart('chart-line', {
     datasets: [{
       data: data,
       label: funds,
+        pointBackgroundColor: customColor,
       borderColor: "#3e95cd"
     }]
   },

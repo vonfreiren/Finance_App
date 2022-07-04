@@ -219,6 +219,14 @@ def portfolio_optimization_result():
 def portfolio_value():
     assetList = []
     weightList = []
+
+    colors = []
+
+    for x in range(0, 15):
+        hexadecimal = ["#" + ''.join([random.choice('ABCDEF0123456789') for i in range(6)])]
+        print(x)
+        colors.append(hexadecimal)
+
     if request.method == 'POST':
         stock = request.form.get('asset')
         session['startdate'] = request.form.get('date')
@@ -228,13 +236,13 @@ def portfolio_value():
             assetList.append(stock)
             weightList.append(1)
             initialValue = float(initialValue)
-            plot_url, finalValue, missingData, wrong_weights, total_return, annualized_return = calculate_portfolio(assetList, weightList, initialValue,
+            plot_url, finalValue, missingData, wrong_weights, total_return, annualized_return, values, labels, dict, list_lists, portfolio, asset_labels = calculate_portfolio(assetList, weightList, initialValue,
                                                                                    session['startdate'])
             if (missingData):
                 flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
             else:
                 return render_template("portfolio_value_res.html", plot_url=plot_url.decode('utf8'),
-                                       initialValue=f'{initialValue:,}', finalValue=f'{finalValue:,}', total_return="{0:.0%}".format(total_return), annualized_return="{0:.0%}".format(annualized_return))
+                                       initialValue=f'{initialValue:,}', finalValue=f'{finalValue:,}', total_return="{0:.0%}".format(total_return), annualized_return="{0:.0%}".format(annualized_return), values = values, labels=labels, df=dict, list_lists=list_lists, portfolio=portfolio, asset_labels=asset_labels, colors=colors)
         else:
             for value in request.form.items():
                 if ("asset" in value[0] and value[1]):
@@ -246,7 +254,7 @@ def portfolio_value():
             if (len(assetList) > 1 and assetList and len(weightList) > 1 and len(weightList) == len(assetList)):
                 initialValue = float(initialValue)
                 weightList = [float(weight) / 100 for (weight) in weightList]
-                plot_url, finalValue, missingData, wrong_weights, total_return, annualized_return = calculate_portfolio(assetList, weightList,
+                plot_url, finalValue, missingData, wrong_weights, total_return, annualized_return, values, labels, dict, list_lists, portfolio, asset_labels = calculate_portfolio(assetList, weightList,
                                                                                        initialValue,
                                                                                        session['startdate'])
                 if wrong_weights:
@@ -256,10 +264,14 @@ def portfolio_value():
                 else:
                     if (len(assetList) > 1 and assetList):
                         return render_template("portfolio_value_res.html", plot_url=plot_url.decode('utf8'),
-                                               initialValue=f'{initialValue:,}', finalValue=f'{finalValue:,}', total_return="{0:.0%}".format(total_return), annualized_return="{0:.0%}".format(annualized_return))
+                                               initialValue=f'{initialValue:,}', finalValue=f'{finalValue:,}', total_return="{0:.0%}".format(total_return), annualized_return="{0:.0%}".format(annualized_return), values=values, labels=labels, df=dict, list_lists=list_lists, portfolio=portfolio, asset_labels=asset_labels, colors=colors)
             else:
                 flash(constants.WRONG_WEIGHTS_ASSETS_NUMBER, constants.FLASH_DANGER_CATEGORY)
     return render_template("portfolio_value.html")
+
+
+
+
 
 
 

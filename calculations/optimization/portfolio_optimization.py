@@ -113,8 +113,6 @@ def optimize(assetList, initialValue, calculation_method, risk):
     img2 = io.BytesIO()
     sns.set_style("darkgrid")
 
-    ax2 = plt.pie(df3.iloc[0], labels=df3.columns, autopct='%.0f%%', pctdistance=0.4, labeldistance=0.5, rotatelabels=False)
-    plt.savefig(img2, format='png')
     labels = df3.columns
     img2.seek(0)
     plot_url_2 = base64.b64encode(img2.getvalue())

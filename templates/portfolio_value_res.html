@@ -24,6 +24,80 @@
                             <strong>{{annualized_return}}</strong></p>
 
 
+
+                                                                                          <canvas id="lineModal" width="900" height="400"></canvas>
+                          <script>
+
+                                                            var data1 = {{labels | safe}};
+                              var data2 = {{list_lists[0] | safe}};
+                              var date3 = {{list_lists | safe}};
+                              var port = {{portfolio[0] | safe}};
+                              var asset_l = {{asset_labels | safe}};
+                              var col = {{colors | safe}};
+
+
+var LINECHART = $('#lineModal');
+window.myLineChart=new Chart(LINECHART,
+{   type: 'line',
+  data: {
+    labels: data1,
+    datasets: [{
+        data: port,
+        label: "Portfolio",
+        borderColor: "#3e95cd",
+        pointRadius: 1,
+pointHoverRadius: 1,
+        fill: false
+      }
+    ]
+  },
+  options: {
+    parsing: false,
+    plugins: {
+      decimation: {
+         enabled: false,
+         algorithm: 'min-max',
+      },
+    },
+    title: {
+      display: true,
+      text: 'Portfolio Evolution'
+    },
+      elements: {
+        line: {
+            tension: 0
+        }
+      },
+      scales: {
+        xAxes: [{
+            ticks: {
+                display: false
+            }
+        }]
+    }
+  }
+
+});
+
+for(let i=0;i<date3.length;i++){
+     myLineChart.data.datasets.push({
+            label: asset_l[i],
+            data: date3[i],
+            borderColor: col[i],
+            fill: false,
+            spanGaps: false,
+         pointRadius: 1,
+pointHoverRadius: 1
+        });
+ }
+ //Use the window object to update myLineChart
+ window.myLineChart.update();
+
+
+                            </script>
+
+
+
                         <form method="POST">
 
                             <img class="img-fluid"
