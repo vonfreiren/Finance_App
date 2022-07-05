@@ -22,7 +22,7 @@ def calculation(assetList):
         missingData = False
         if(data.empty):
             missingData = True
-            return None, True
+            return None, True, None
         name = preDownloadSecurityDB(asset)
         df[name] = data['Close']
 
@@ -36,6 +36,8 @@ def calculation(assetList):
     exp_rtns = np.zeros(n)
     exp_vols = np.zeros(n)
     sharpe_ratios = np.zeros(n)
+    values_list = []
+    labels_list = []
     for i in range(n):
         weight = np.random.random(df.shape[1])
         weight /= weight.sum()
@@ -44,6 +46,15 @@ def calculation(assetList):
         exp_rtns[i] = np.sum(log_returns.mean() * weight) * 252
         exp_vols[i] = np.sqrt(np.dot(weight.T, np.dot(log_returns.cov() * 252, weight)))
         sharpe_ratios[i] = exp_rtns[i] / exp_vols[i]
+
+        d = {'x': exp_vols[i]}
+        d['y'] = exp_rtns[i]
+        d['z'] =sharpe_ratios[i]
+
+        values_list.append(d)
+        labels_list.append(sharpe_ratios[i])
+
+
 
     img = io.BytesIO()
     fig, ax = plt.subplots(figsize=(6,4))  # Sample figsize in inches
@@ -54,4 +65,4 @@ def calculation(assetList):
     plt.savefig(img, format='png')
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue())
-    return plot_url, missingData
+    return plot_url, missingData, values_list, labels_list

@@ -112,11 +112,11 @@ def montecarlo():
                 asset = value[1].upper().split(' ')[0]
                 assetList.append(asset)
     if (len(assetList) > 1 and assetList):
-        plot_url, missingData = calculation(assetList)
+        plot_url, missingData, values_list, labels_list = calculation(assetList)
         if missingData:
             flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
         else:
-            return render_template("montecarlo_res.html", plot_url=plot_url.decode('utf8'))
+            return render_template("montecarlo_res.html", plot_url=plot_url.decode('utf8'), values_list=values_list, labels_list=labels_list)
 
     return render_template("montecarlo.html")
 

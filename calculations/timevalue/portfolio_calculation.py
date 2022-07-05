@@ -77,7 +77,10 @@ def calculate_portfolio(assetList, weightList, initialValue, startDate):
     for column in aggregated.columns:
         if column == 'Portfolio':
             portfolio.append(aggregated[column].values.tolist())
+
         else:
+            if len(df.columns) == 1:
+                portfolio.append(aggregated[column].values.tolist())
             list_lists.append(aggregated[column].values.tolist())
             asset_labels.append(column)
 

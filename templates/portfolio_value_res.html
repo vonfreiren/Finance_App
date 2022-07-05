@@ -25,11 +25,10 @@
 
 
 
-                                                                                          <canvas id="lineModal" width="900" height="400"></canvas>
+                                                                                          <canvas id="lineModal" width="1600" height="1000"></canvas>
                           <script>
 
                                                             var data1 = {{labels | safe}};
-                              var data2 = {{list_lists[0] | safe}};
                               var date3 = {{list_lists | safe}};
                               var port = {{portfolio[0] | safe}};
                               var asset_l = {{asset_labels | safe}};
@@ -45,8 +44,8 @@ window.myLineChart=new Chart(LINECHART,
         data: port,
         label: "Portfolio",
         borderColor: "#3e95cd",
-        pointRadius: 1,
-pointHoverRadius: 1,
+        pointRadius: 2,
+pointHoverRadius: 2,
         fill: false
       }
     ]

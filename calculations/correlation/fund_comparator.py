@@ -71,7 +71,7 @@ def calculate_funds(asset):
         d['y'] = row['Std_3']
         d['z'] = idx
         labels_list.append(idx)
-        values_list.append((d))
+        values_list.append(d)
         plt.text(row['Return_3'], row['Std_3'], idx)
     ax.set_xlabel("Return")
     ax.set_ylabel("Standard Deviation")
