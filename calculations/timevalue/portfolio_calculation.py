@@ -29,7 +29,7 @@ def calculate_portfolio(assetList, weightList, initialValue, startDate):
         if data.empty:
             missing_data = True
             return None, None, missing_data, wrong_weights, None, None, None, None, None
-        name = preDownloadSecurityDB(asset)
+        name, asset_type, exchange, market, currency = preDownloadSecurityDB(asset)
         df[name] = data['Close']
 
     df = df.ffill().bfill()

@@ -41,15 +41,24 @@ class Security(db.Model):
 
 def preDownloadSecurityDB(instrument):
     assetName = ""
+    quoteType = ""
+    exchange = ""
+    market = ""
+    yield_amount = ""
+    currency = ""
     security = retrieveSecurityDB(instrument)
     if (security is not None):
         assetName = security.name
+        quoteType = security.asset_type
+        exchange = security.exchange
+        market = security.market
+        currency = security.currency
     else:
         assetName, quoteType, exchange, market, currency, yield_amount, category, morningStarRiskRating = retrieveAssetName(
             instrument)
         insertSecurityDB(instrument, assetName, quoteType, exchange, market, currency, yield_amount,
                          category, morningStarRiskRating)
-    return assetName
+    return assetName, quoteType, exchange, market, currency
 
 
 def retrieveSecurityDB(asset):

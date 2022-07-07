@@ -23,7 +23,7 @@ def calculation(assetList):
         if(data.empty):
             missingData = True
             return None, True, None
-        name = preDownloadSecurityDB(asset)
+        name, asset_type, exchange, market, currency = preDownloadSecurityDB(asset)
         df[name] = data['Close']
 
 

@@ -167,7 +167,7 @@ def calculate_differences(df):
         else:
             try:
                 previous_day = pd.to_datetime(data.index[-1]).to_pydatetime() - timedelta(1)
-                name = preDownloadSecurityDB(symbol)
+                name, asset_type, exchange, market, currency = preDownloadSecurityDB(symbol)
                 price_now = data['Close'][-1]
                 previous_day_str = previous_day.strftime('%Y-%m-%d')
                 price_previous_day = data.loc[start_date:previous_day_str]['Close'][-1]

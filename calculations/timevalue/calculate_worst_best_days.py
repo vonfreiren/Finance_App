@@ -19,7 +19,8 @@ def calculate_worst_best(asset):
         return None, None, missingData
     data.dropna()
     data['pct_change'] = data['Close'].pct_change()
-    asset = preDownloadSecurityDB(asset)
+    name, asset_type, exchange, market, currency = preDownloadSecurityDB(asset)
+    calculate_holdings(asset, exchange, market, currency)
     df[asset] = data['pct_change']
     df = df.sort_values(by=asset)
     df = df.dropna()

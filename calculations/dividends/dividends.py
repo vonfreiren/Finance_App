@@ -7,6 +7,7 @@ import io
 import seaborn as sns
 import pandas as pd
 from auxiliar.feed_security_data import preDownloadSecurityDB
+from auxiliar.ft import calculate_ft
 
 matplotlib.use('Agg')
 
@@ -18,14 +19,14 @@ def retrieve_dividends(asset):
         missingData = True
         return None, missingData, None, None, None, None
     data.dropna()
-    asset = preDownloadSecurityDB(asset)
-    img = io.BytesIO()
-    fig, ax = plt.subplots(figsize=(16, 12), dpi=150)
-    sns.set_style("dark")
-    ax = sns.lineplot(data=data, markers=True, marker="*")
+    name, asset_type, exchange, market, currency = preDownloadSecurityDB(asset)
+
+
+    calculate_ft(asset, asset_type, exchange, market, currency)
+
     df = data.to_frame()
     mean = data.mean()
-    last_5 =df.tail()
+    last_5 = df.tail()
 
     values = df.values.tolist()
     values = [row[0] for row in values]
@@ -36,18 +37,7 @@ def retrieve_dividends(asset):
         list_lists.append(df[column].values.tolist())
 
 
-    #fig, ax = plt.subplots(figsize=(14,10), dpi=120)
-    #ax = sns.barplot(x= data.index,y=data)
-
-    ax.get_figure().autofmt_xdate()
-    ax.set_xlabel("Time")
-    ax.set_ylabel("Value")
-    ax.plot()
-    plt.savefig(img, format='png',edgecolor='blue', facecolor='white', transparent=False, dpi=500)
-    img.seek(0)
-    plot_url = base64.b64encode(img.getvalue())
 
 
 
-
-    return plot_url, missingData, mean, last_5, values, labels
+    return missingData, mean, last_5, values, labels
