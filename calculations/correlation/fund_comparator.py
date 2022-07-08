@@ -10,6 +10,7 @@ import base64
 import io
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from GoogleNews import GoogleNews
 
 import seaborn as sns
 from auxiliar.feed_security_data import retrieveFunds, retrieveSecurityDB, preDownloadSecurityDB
@@ -53,8 +54,9 @@ def calculate_funds(asset):
             continue
             missingData = True
 
-        data = data.round(2)
+        data = data.round(3)
         if fund == asset:
+            retrieveNews()
             price = yf.Ticker(asset).get_info()['regularMarketPrice']
             last_price = data['Close'][-1]
             last_change = price - last_price
@@ -62,9 +64,9 @@ def calculate_funds(asset):
             price_last_year = data['Close'][-255]
             change_last_year = (price - price_last_year)/price_last_year* 100
 
-            last_change = round(last_change, 2)
-            last_pct_change = round(last_pct_change, 2)
-            change_last_year = round(change_last_year, 2)
+            last_change = round(last_change, 3)
+            last_pct_change = round(last_pct_change, 3)
+            change_last_year = round(change_last_year, 3)
 
 
         security = retrieveSecurityDB(fund)
@@ -112,4 +114,15 @@ def calculate_funds(asset):
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue())
 
-    return plot_url, missingData, asset, return_3, std_3, values_list, labels_list, price, price_last_year, last_change, last_pct_change, change_last_year
+    return plot_url, missingData, asset, return_3, std_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year
+
+
+def retrieveNews():
+    news = GoogleNews(period='1w')
+    news.search('NESTLE SHARES')
+    result = news.result()
+    data = pd.DataFrame.from_dict(result)
+    data.head()
+
+
+retrieveNews()

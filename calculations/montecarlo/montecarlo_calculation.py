@@ -47,12 +47,12 @@ def calculation(assetList):
         exp_vols[i] = np.sqrt(np.dot(weight.T, np.dot(log_returns.cov() * 252, weight)))
         sharpe_ratios[i] = exp_rtns[i] / exp_vols[i]
 
-        d = {'x': exp_vols[i]}
-        d['y'] = exp_rtns[i]
-        d['z'] =sharpe_ratios[i]
+        d = {'x': exp_vols[i].round(2)}
+        d['y'] = exp_rtns[i].round(2)
+        d['z'] = sharpe_ratios[i].round(2)
 
         values_list.append(d)
-        labels_list.append(sharpe_ratios[i])
+        labels_list.append(sharpe_ratios[i].round(2))
 
 
 

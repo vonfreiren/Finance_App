@@ -66,25 +66,23 @@
   function customRadius( context )
   {
           let index = context.dataIndex;
-    const max = Math.max(funds)
-      let index_max = funds.indexOf(max)
-      console.log(index_max)
+    const max = Math.max(...funds);
+      let index_max = funds.indexOf(max);
       if (index == index_max){
-          return 4
+          return 8;
       }else{
-          return 2
+          return 3;
       }
   }
 
     function customColor( context )
   {
     let index = context.dataIndex;
-    let value = context.dataset.data[ index ];
 
-    const max = Math.max(funds)
-      let index_max = funds.indexOf(max)
+    const max = Math.max(...funds);
+      let index_max = funds.indexOf(max);
       if (index == index_max){
-          return 'green'
+          return 'green';
       }else{
           return 'blue'
       }

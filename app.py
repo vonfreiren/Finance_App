@@ -139,16 +139,18 @@ def dividends():
 
 @app.route('/funds_comparator', methods=['GET', 'POST'])
 def compare_fund():
+    ticker = ''
     if request.method == 'POST':
         asset = request.form.get('asset')
         if (asset):
             asset = asset.split(' ')[0]
-            plot_url, missing_data, asset, std_3, return_3, values_list, labels_list, price, price_last_year, last_change, last_pct_change, change_last_year  = calculate_funds(asset)
+            ticker = asset
+            plot_url, missing_data, asset, std_3, return_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year  = calculate_funds(asset)
             if missing_data:
                 flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
             else:
                 if (asset):
-                    return render_template("funds_results.html", asset=asset, plot_url=plot_url.decode('utf8'), std_3=std_3, return_3=return_3, values_list=values_list, labels_list = labels_list, price=price, price_last_year=price_last_year, last_change=last_change, last_pct_change=last_pct_change, change_last_year=change_last_year)
+                    return render_template("funds_results.html", ticker=ticker, asset=asset, plot_url=plot_url.decode('utf8'), std_3=std_3, return_3=return_3, values_list=values_list, labels_list = labels_list, price=price, currency=currency, price_last_year=price_last_year, last_change=last_change, last_pct_change=last_pct_change, change_last_year=change_last_year)
 
     return render_template("funds.html")
 
