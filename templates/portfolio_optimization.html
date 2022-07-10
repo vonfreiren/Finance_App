@@ -5,15 +5,13 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    {% include "navigation.html" %}
-    {% block body %}
-    {% include "header_main.html" %}
-    <div class="container">
-        <div class="col-lg-10 col-md-10 mx-auto">
-            <div class="page-heading">
-                <div class="container">
-                    <div class="post-heading">
-                        <div class="card-header">
+        {% extends "default.html" %}
+
+    </head>
+
+{% block content %}
+<body>
+        <div class="col-lg-7 col-md-7 mx-auto">
                             <h2>Portfolio Optimization</h2>
                             <form method="POST" name="form_opti">
                                 <div class='row'>
@@ -260,17 +258,11 @@
 
 
             </div>
-        </div>
 
 
-    </div>
-    </div>
-    </div>
-    </div>
     </header>
 
     {% endblock %}
-    {% include "footer.html" %}
-</head>
+</body>
 
 </html>

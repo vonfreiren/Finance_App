@@ -4,19 +4,37 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
             <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>
-    {% include "navigation.html" %}
-    {% block body %}
-    {% include "header_main.html" %}
+    {% extends "default.html" %}
+    </head>
+{% block content %}
+<body>
+
+            <div class="col-lg-7 col-md-7 mx-auto">
+
+                               <div class="card-header">
+                                                           <h6 align="center">Dividend {{security_info[0]}}</h6>
+                                                            <ul>
+                                                                                                                                <li class="list-inline-item">Price: <strong>{{financial_info[1]}}</strong> </li>
+
+                                                                                                                                <li class="list-inline-item">Earnings Per Share: <strong>{{financial_info[0]}}</strong> </li>
+
+                                                                                                                                <li class="list-inline-item">P/E Ratio: <strong>{{financial_info[2]}}</strong> </li>
+
+                                                                                                                                <li class="list-inline-item">Average Last 5 Dividends: <strong>{{dividend_info[1]}}</strong> </li>
+                                                                <li class="list-inline-item">Average Dividend: <strong>{{dividend_info[0]}}</strong> </li>
+
+                                             </ul>
+                                    </div>
 
 
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 mx-auto">
-                <div class="page-heading">
-                    <h4>{{asset}} | Dividends</h4>
-                    <h5>Average dividend: {{mean}}</h5>
-                    <h6>Last 5 dividends</h6>
+                <hr>
+            <div class="col-lg-10 col-md-10 mx-auto">
+                                                                           <h6 align="center">Last Dividends</h6>
                     {{last_5 | safe}}
+                </div>
+                            <div class="col-lg-10 col-md-10 mx-auto">
+                                                                           <h6 align="center">Dividend History</h6>
+
                                                                         <canvas id="lineChart" width="1400" height="900"></canvas>
                           <script>
                                 var ctx = document.getElementById('lineChart').getContext('2d');
@@ -38,6 +56,7 @@
                                 }
                                 });
                             </script>
+                                </div>
                     <form method="POST">
                         <br>
                         <button type="submit" class="btn-sm btn-primary">Calculate Again</button>
@@ -46,11 +65,9 @@
                 </div>
             </div>
         </div>
-    </div>
-    </div>
-    </div>
+
+        </div>
 
     {% endblock %}
-    {% include "footer.html" %}
-</head>
+</body>
 </html>

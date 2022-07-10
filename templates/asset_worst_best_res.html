@@ -3,16 +3,35 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    {% include "navigation.html" %}
-    {% block body %}
-    {% include "header_main.html" %}
+        {% extends "default.html" %}
+
+    </head>
+
+{% block content %}
+<body>
+           <div class="col-lg-6 col-md-6 mx-auto">
+                    <h2>{{security_info[0]}}</h2>
+                    <h5>Best & Worst Days</h5>
+
+<aside>
+
+               <div class="card-header">
+                                                           <h6 align="center">Price Evolution in {{security_info[1]}}</h6>
+                                                            <ul>
+                                                                <li>Price: <strong>{{prices_list[0]}}</strong> </li>
+                    <li>Last Year: <strong>{{prices_list[1]}}</strong> </li>
+                    <li>2 Years ago: <strong>{{prices_list[2]}}</strong> </li>
+                                                 <li>3 Years ago: <strong>{{prices_list[3]}}</strong> </li>
+
+                                             </ul>
+                                    </div>
 
 
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">F
-                <div class="page-heading">
-                    <h2>{{asset}} Best & Worst Days</h2>
+
+</aside>
+<section>
+
+            <div class="col-lg-7 col-md-7 mx-auto">
                     <form method="POST">
                         <h5>Best Days</h5>
                         <h1>{{name}}</h1>
@@ -28,11 +47,9 @@
                 </div>
             </div>
         </div>
-    </div>
-    </div>
-    </div>
 
     {% endblock %}
-    {% include "footer.html" %}
-</head>
+</section>
+        </div>
+</body>
 </html>

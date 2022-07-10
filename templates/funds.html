@@ -4,14 +4,14 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    {% include "navigation.html" %}
-    {% block body %}
-    {% include "header.html" %}
+        {% extends "default.html" %}
 
-    <div class="container" align="left">
-        <div class="row">
+</head>
+
+{% block content %}
+<body>
+
             <div class="col-lg-12 col-md-12 mx-auto">
-                <div class="page-heading">
                     <div class="container">
                         <div class="post-heading">
                                 <h2>Securities Searcher</h2>
@@ -36,8 +36,6 @@
                                         <span class="btn-text pull-right">Submit</span>
                                     </button>
                                     <input type="reset" class="btn-sm btn-primary pull-right">
-                                    <p>
-                                    </p>
                                     <br>
                                 </form>
                         </div>
@@ -45,12 +43,7 @@
                 </div>
             </div>
 
-
-        </div>
-    </div>
-    </div>
-    </div>
+            </div>
     {% endblock %}
-    {% include "footer.html" %}
-</head>
+</body>
 </html>

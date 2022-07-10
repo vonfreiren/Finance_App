@@ -6,18 +6,24 @@
   width: 100%;
   margin-bottom: $spacer;
   color: $table-color;
+  text-align: right;
   background-color: $table-bg; // Reset for nesting within parents with `background-color`.
 
   th,
   td {
     padding: $table-cell-padding;
-    vertical-align: top;
+    vertical-align: middle;
+    text-align: right;
     border-top: $table-border-width solid $table-border-color;
+
+
   }
 
   thead th {
     vertical-align: bottom;
     border-bottom: (2 * $table-border-width) solid $table-border-color;
+        text-align: right;
+
   }
 
   tbody + tbody {
@@ -64,6 +70,7 @@
   thead th,
   tbody + tbody {
     border: 0;
+    text-align: right;
   }
 }
 

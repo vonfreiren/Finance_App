@@ -127,12 +127,12 @@ def dividends():
         asset = request.form.get('asset')
         if (asset):
             asset = asset.split(' ')[0]
-            missing_data, mean, last_5, values, labels = retrieve_dividends(asset)
+            missing_data, dividend_info, last_5, values, labels, security_info, company_info, financial_info = retrieve_dividends(asset)
             if missing_data:
                 flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
             else:
                 if (asset):
-                    return render_template("dividends_results.html", asset=asset, mean=mean, last_5=last_5.to_html(classes=["table-bordered", "table-striped", "table-hover"]).replace('<tr>','<tr style="text-align: right;">'), values=values, labels=labels)
+                    return render_template("dividends_results.html", asset=asset, dividend_info=dividend_info, last_5=last_5.to_html(classes='table text-right'), values=values, labels=labels, security_info=security_info, company_info=company_info, financial_info=financial_info)
 
     return render_template("dividends.html")
 
@@ -145,12 +145,12 @@ def compare_fund():
         if (asset):
             asset = asset.split(' ')[0]
             ticker = asset
-            plot_url, missing_data, asset, std_3, return_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year  = calculate_funds(asset)
+            missing_data, asset, std_3, return_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year, list_news = calculate_funds(asset)
             if missing_data:
                 flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
             else:
                 if (asset):
-                    return render_template("funds_results.html", ticker=ticker, asset=asset, plot_url=plot_url.decode('utf8'), std_3=std_3, return_3=return_3, values_list=values_list, labels_list = labels_list, price=price, currency=currency, price_last_year=price_last_year, last_change=last_change, last_pct_change=last_pct_change, change_last_year=change_last_year)
+                    return render_template("funds_results.html", ticker=ticker, asset=asset, std_3=std_3, return_3=return_3, values_list=values_list, labels_list = labels_list, price=price, currency=currency, price_last_year=price_last_year, last_change=last_change, last_pct_change=last_pct_change, change_last_year=change_last_year, list_news=list_news)
 
     return render_template("funds.html")
 
@@ -161,14 +161,12 @@ def asset_worst_best():
         asset = request.form.get('asset')
         asset = asset.split(' ')[0]
         if (asset):
-            df_worst, df_best, missing_data = calculate_worst_best(asset)
+            df_worst, df_best, missing_data, prices_list, security_info = calculate_worst_best(asset)
             if missing_data:
                 flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
             else:
                 if (asset):
-                    return render_template("asset_worst_best_res.html", asset=asset, df_best=df_best.to_html(
-                        classes=["table-bordered", "table-striped", "table-hover"]).replace('<tr>','<tr style="text-align: right;">'), df_worst=df_worst.to_html(
-                        classes=["table-bordered", "table-striped", "table-hover"]).replace('<tr>','<tr style="text-align: right;">'))
+                    return render_template("asset_worst_best_res.html", asset=asset, df_best=df_best.to_html(classes='table text-right'), df_worst=df_worst.to_html(classes='table text-righ'), prices_list =prices_list, security_info=security_info)
 
     return render_template("asset_worst_best.html")
 

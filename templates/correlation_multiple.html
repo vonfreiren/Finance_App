@@ -3,17 +3,14 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    {% include "navigation.html" %}
-    {% block body %}
-    {% include "header_main.html" %}
+        {% extends "default.html" %}
 
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-10 col-md-10 mx-auto">
-                <div class="page-heading">
-                    <div class="container">
-                        <div class="post-heading">
-                            <div class="card-header">
+    </head>
+
+{% block content %}
+<body>
+
+            <div class="col-lg-7 col-md-7 mx-auto">
                                 <h2>Correlation Calculation</h2>
                                 <form method="POST">
                                     <div class="form-group" align="left">
@@ -126,16 +123,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-
-        </div>
-    </div>
-    </div>
-    </div>
 
     {% endblock %}
-    {% include "footer.html" %}
-</head>
+</body>
 </html>

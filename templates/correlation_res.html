@@ -3,23 +3,22 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    {% include "navigation.html" %}
-    {% block body %}
-    {% include "header_main.html" %}
+        {% extends "default.html" %}
 
-    <div class="container" align="left">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 mx-auto">
-                <div class="page-heading">
-                    <div class="container-lg">
-                        <div class="post-heading">
+    </head>
+
+{% block content %}
+<body>
+
+
+            <div class="col-lg-7 col-md-7 mx-auto">
                             <h2>Correlation Calculation</h2>
                             <form method="POST">
                                 <h5>{{asset}} | {{name}}</h5>
-                                <small>against</small>
+                                <h5>against</h5>
                                 <h5>{{asset2}} | {{name2}}</h5>
-                                Alpha: {{alpha}}<br>
-                                Beta: {{beta}}
+                                <h5>Alpha: {{alpha}}<h5>
+                                                                    <h5>Beta: {{beta}}<h5>
                                 <div>
                                     <img class="img-fluid" src="data:image/png;base64, {{ plot_url }}" ,
                                          align="center">
@@ -31,12 +30,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
     {% endblock %}
-    {% include "footer.html" %}
-</head>
+</body>
 </html>

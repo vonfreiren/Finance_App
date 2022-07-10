@@ -17,7 +17,6 @@ from auxiliar.feed_security_data import retrieveFunds, retrieveSecurityDB, preDo
 
 
 def calculate_funds(asset):
-    img = io.BytesIO()
     df = pd.DataFrame()
     data = pd.DataFrame()
     end_date = datetime.today().strftime('%Y-%m-%d')
@@ -56,9 +55,12 @@ def calculate_funds(asset):
 
         data = data.round(3)
         if fund == asset:
-            retrieveNews()
+            list_news = retrieveNews(name)
             price = yf.Ticker(asset).get_info()['regularMarketPrice']
             last_price = data['Close'][-1]
+            #IF the latest price is loaded, we take the one before that
+            if last_price == price:
+                last_price = data['Close'][-2]
             last_change = price - last_price
             last_pct_change = (price - last_price)/last_price * 100
             price_last_year = data['Close'][-255]
@@ -85,10 +87,8 @@ def calculate_funds(asset):
     if (security is not None):
         asset = security.name
 
-    fig, ax = plt.subplots()
     sharpe_ratio = df.loc[asset].Return_3/ df.loc[asset].Std_3
 
-    scatter = sns.scatterplot(data=df, x='Return_3', y='Std_3')
 
     values_list = []
     labels_list = []
@@ -99,30 +99,23 @@ def calculate_funds(asset):
         d['z'] = idx
         labels_list.append(idx)
         values_list.append(d)
-        plt.text(row['Return_3'], row['Std_3'], idx)
-    ax.set_xlabel("Return")
-    ax.set_ylabel("Standard Deviation")
-
-    print(values_list)
-    print(labels_list)
 
 
-    ax.plot()
-    fig = scatter.get_figure()
-    plt.savefig(img, format='png')
-    plt.title("Asset Classes Correlation Matrix")
-    img.seek(0)
-    plot_url = base64.b64encode(img.getvalue())
-
-    return plot_url, missingData, asset, return_3, std_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year
+    return missingData, asset, return_3, std_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year, list_news
 
 
-def retrieveNews():
+def retrieveNews(ticker):
     news = GoogleNews(period='1w')
-    news.search('NESTLE SHARES')
+    news.search(ticker+ 'SHARES')
     result = news.result()
     data = pd.DataFrame.from_dict(result)
+    list_news = []
+
+    for idx, row in data.iterrows():
+        single_new = [row['title'], row['media'], row['date'], row['link']]
+        list_news.append(single_new)
+
     data.head()
+    return list_news
 
 
-retrieveNews()

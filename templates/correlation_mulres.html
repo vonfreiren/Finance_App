@@ -3,16 +3,13 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    {% include "navigation.html" %}
-    {% block body %}
-    {% include "header_main.html" %}
+        {% extends "default.html" %}
 
-    <div class="container" align="center">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 mx-auto">
-                <div class="page-heading">
-                    <div class="container-lg">
-                        <div class="post-heading">
+    </head>
+
+{% block content %}
+<body>
+            <div class="col-lg-7 col-md-7 mx-auto">
                             <h3>Correlation Calculation</h3>
 
                             <form method="POST">
@@ -23,21 +20,12 @@
                                 <br/>
                                 <button type="submit" class="btn-sm pull-right btn-primary">Calculate Again</button>
                                 <br>
-                                <p>
-                                </p>
                             </form>
                         </div>
 
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
-
 
     {% endblock %}
-    {% include "footer.html" %}
-</head>
+</body>
 </html>
