@@ -15,7 +15,7 @@
 {% block content %}
 
 <body onload="positiveNegative()">
-            <div class="col-lg-7 col-md-7 mx-auto">
+            <div class="col-lg-11 col-md-11 mx-auto">
         <div class="card-header">
                                     <h5>{{asset}}</h5>
                                                 <h6>{{ticker}}</h6>
@@ -23,12 +23,12 @@
 
             <ul>
                 <li class="list-inline-item">
-                    <span>PRICE IN {{currency}}: <strong>{{price}}</strong></span>
+                    <span>Price ({{currency}}): <strong>{{price}}</strong></span>
                                 </li>
 
 
                                                 <li class="list-inline-item">
-                                                    <span>CHANGE TODAY: </span>
+                                                    <span>Change Today: </span>
                                                                                                         <i id="greenArrow" class='fas fa-arrow-alt-circle-up' style='font-size:16px;color:green'></i>
                                                     <i id="redArrow" class='fas fa-arrow-alt-circle-down' style='font-size:16px;color:red'></i>
                 <span id="priceLast"><strong>{{last_change}} / {{last_pct_change}} %</strong> </span>
@@ -36,7 +36,7 @@
                 </li>
 
                  <li class="list-inline-item">
-                     <span>CHANGE 1 YEAR AGO: </span>
+                     <span>Price 1 year ago: </span>
                                                                                                                              <i id="greenArrow1" class='fas fa-arrow-alt-circle-up' style='font-size:16px;color:green'></i>
                                                     <i id="redArrow1" class='fas fa-arrow-alt-circle-down' style='font-size:16px;color:red'></i>
                                                     <span id="priceLastYear"> <strong> {{price_last_year}} / {{change_last_year}} % </strong> </span>
@@ -44,11 +44,48 @@
 
                 </li>
             </ul>
+             <ul>
+                <li class="list-inline-item">
+                    <span>Earnings per Share: <strong>{{financial_info[0]}}</strong>  </span>
+                                </li>
+
+
+                <li class="list-inline-item">
+                    <span>P/E Ratio: <strong>{{financial_info[2]}}</strong>  </span>
+
+                </li>
+
+                <li class="list-inline-item">
+                    <span>Debt/Equity Ratio: <strong>{{financial_info[3]}}</strong> </span>
+
+                                 <li class="list-inline-item">
+                    <span>Beta: <strong>{{financial_info[4]}}</strong> </span>
+            </ul>
+                        <ul>
+                <li class="list-inline-item">
+                    <span>Sector: <strong>{{company_info[1]}}</strong>  </span>
+                                </li>
+
+
+                <li class="list-inline-item">
+                    <span>Industry: <strong>{{company_info[2]}}</strong>  </span>
+
+                </li>
+
+                <li class="list-inline-item">
+                    <span>Country: <strong>{{company_info[3]}}</strong> </span>
+
+
+                <li class="list-inline-item">
+                    <span>Website: <a href={{company_info[4]}}>{{company_info[4]}}</a></span>
+            </ul>
+                        <hr>
+            <small>{{company_info[0]}}</small>
             </div>
             </div>
             <hr>
 
-            <div class="col-lg-6 col-md-6 mx-auto">
+            <div class="col-lg-11 col-md-11 mx-auto">
                                         <h6 align="center">News</h6>
 
                                                     {% for list in list_news %}
@@ -60,12 +97,13 @@
 
                                     </div>
             <hr>
+                                <div class="col-lg-8 col-md-8 mx-auto">
+            <section class="col-lg-4 col-md-4 mx-auto">
 
-                            <div class="col-lg-5 col-md-5 mx-auto">
 
                     <h6 align="center">Companies comparator</h6>
 
- <canvas id="chart-line"  width="200" height="200"></canvas>
+ <canvas id="chart-line"  width="700" height="700"></canvas>
                           <script>
 
                     var data = {{values_list | safe}};
@@ -95,6 +133,9 @@
           }
         },
     plugins: {
+       datalabels: {
+        display: false,
+    },
         tooltip: {
             callbacks: {
                 label: (context) => {
@@ -163,7 +204,7 @@ var chart = new Chart('chart-line', {
   data: {
     datasets: [{
       data: data,
-      label: funds,
+      label: "",
         pointBackgroundColor: customColor,
       borderColor: "#3e95cd"
     }]
@@ -171,16 +212,63 @@ var chart = new Chart('chart-line', {
 options:options});
                             </script>
 
-  </div>
+            </section>
+
+            <aside class="col-lg-4 col-md-4 mx-auto">
+                                <h6 align="center">Price evolution</h6>
+
+                                                                        <canvas id="lineChart" width="1400" height="900"></canvas>
+
+ <script>
+                                var ctx = document.getElementById('lineChart').getContext('2d');
+                                var lineChart = new Chart(ctx, {
+                                    type: "bar",
+                                    data: {
+                                        labels:
+                                            {{ name_list | safe }},
+                                datasets: [
+                                    {
+                                    backgroundColor: "rgba(14,72,100,1)",
+                                     strokeColor: "cyan",
+                                        label: "Price ({{ currency }})",
+                                        data: {{ portfolio | safe }},
+                                fill: false,
+                                    lineTension: 0.2
+                                }
+                                ]
+                                }
+                                });
+                            </script>
+
+            </aside>
+
+                                    <p>
+
+                                    </p>
+                                            <section class="col-lg-11 col-md-11 mx-auto">
+                                                                                <h6 align="center">Balance sheet (in Millions)  </h6>
+
+                                                <div class="col-lg-11 col-md-11 mx-auto" align="center">
+                                                          {{balance_sheet | safe}}
     </div>
+                                                                                    </section>
+
 
                     <form class="col-lg-6 col-md-6 mx-auto" method="POST">
                         <br>
-                        <button type="submit" class="btn-sm btn-primary">Calculate Again</button>
+                        <button type="submit" class="btn-sm pull-right btn-primary">Calculate Again</button>
                         <br>
                     </form>
     </div>
+      </div>
+
 
     {% endblock %}
 </body>
+
+
+
+
+
 </html>
+

@@ -46,15 +46,16 @@ html {
 section
 {
     display : inline-block;
-    width: 60%;
+    width: 50%;
 }
 
 aside
 {
     display : inline-block;
-    width: 30%;
+    width: 50%;
     alignment: left;
     float:right;
+    margin-right: 3.75rem;
 }
 
 body {

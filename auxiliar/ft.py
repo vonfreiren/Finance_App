@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-
-from auxiliar.equivalence_map import dictOfExchanges, equities, etfs
+import pandas as pd
+from auxiliar.equivalence_map import dictOfExchanges, equities, etfs, dictOfUSExchanges
 
 
 def calculate_ft(ticker, asset_type, exchange, market, currency):
@@ -33,7 +33,11 @@ def calculate_ft(ticker, asset_type, exchange, market, currency):
 
 
 def calculate_holdings(holdings_list, dict_zones, ticker, exchange, asset_type, currency):
-    api_url = 'https://markets.ft.com/data/{0}/tearsheet/holdings?s={1}:{2}:{3}'.format(asset_type, ticker, exchange,
+    holdings_list = []
+    weights_list = []
+    if ':' not in ticker:
+        ticker = ticker+':'+dictOfUSExchanges[exchange]
+    api_url = 'https://markets.ft.com/data/{0}/tearsheet/holdings?s={1}:{2}'.format(asset_type, ticker,
                                                                                         currency)
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
@@ -44,13 +48,40 @@ def calculate_holdings(holdings_list, dict_zones, ticker, exchange, asset_type, 
     top_holdings = soup.find_all("span", {"class": "mod-ui-table__cell__disclaimer"})
     for symbol in top_holdings:
         holdings_list.append(symbol.text + "-")
+    percentages = soup.find_all("td", {"class": "mod-top-ten__holdings-row-allocation"})
+    for counter, percentage in enumerate(percentages):
+        weight = percentage.find_previous()
+        weights_list.append(weight.text)
+
     zones = soup.find_all("span", {"class": "mod-ui-table__cell--colored__wrapper"})
     for zone in zones:
         value = zone.find_next().text
         if ('%' in value):
             dict_zones[zone.text] = value
 
-    return holdings_list, dict_zones
+    holdings_list = ammend_tickers(holdings_list)
+    weights_list = weights_list[:len(holdings_list)]
+    data_tuples = list(zip(holdings_list, weights_list))
+    balance_sheet = pd.DataFrame(data_tuples, columns=['Company', 'Allocation'])
+    balance_sheet = balance_sheet.set_index('Company')
+
+    return balance_sheet
+
+def ammend_tickers(holdings_list):
+    new_holding_list = []
+    for holding in holdings_list:
+        ticker = holding.split(':')[-1][:3]
+        if ticker in dictOfUSExchanges.keys():
+            holding = holding.split(':')[0]
+            new_holding_list.append(holding)
+        else:
+            exchange = holding[-5:].replace('-', '')
+            replace_value = dictOfExchanges.get(exchange)
+            if replace_value:
+                holding = holding.replace(exchange, replace_value)
+            new_holding_list.append(holding.split('-')[0])
+
+    return new_holding_list
 
 
 # summary

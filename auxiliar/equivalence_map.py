@@ -8,10 +8,21 @@ dictOfExchanges = {':SHH': '.SS',
                    ':PAR': '.PA',
                    ':SZZ': '.SZ',
                    ':SBK': '.JO',
-                   ':MCX': '.MO'}
+                   ':MCX': '.MO',
+                   ':AEX': '.AS',
+                   ':TYO': '.T',
+                   ':SWX': '.SW',
+                   ':CPH': '.CO',
+                   ':HKG': '.HK',
+                   ':NSI': '.NS',
+                   ':TAI': '.TW'}
 
 equities='equities'
 etfs = 'etfs'
+
+dictOfUSExchanges = {'PCX': 'PCQ',
+                     'NSQ': 'NSQ',
+                     'NYQ': 'NYQ'}
 
 
 #Does not work with KL

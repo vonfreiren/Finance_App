@@ -132,7 +132,7 @@ def dividends():
                 flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
             else:
                 if (asset):
-                    return render_template("dividends_results.html", asset=asset, dividend_info=dividend_info, last_5=last_5.to_html(classes='table text-right'), values=values, labels=labels, security_info=security_info, company_info=company_info, financial_info=financial_info)
+                    return render_template("dividends_results.html", asset=asset, dividend_info=dividend_info, last_5=last_5.to_html(classes='table-striped text-right'), values=values, labels=labels, security_info=security_info, company_info=company_info, financial_info=financial_info)
 
     return render_template("dividends.html")
 
@@ -140,17 +140,23 @@ def dividends():
 @app.route('/funds_comparator', methods=['GET', 'POST'])
 def compare_fund():
     ticker = ''
+    colors = []
+
+    for x in range(0, 1):
+        hexadecimal = ["#" + ''.join([random.choice('ABCDEF0123456789') for i in range(6)])]
+        print(x)
+        colors.append(hexadecimal)
     if request.method == 'POST':
         asset = request.form.get('asset')
         if (asset):
             asset = asset.split(' ')[0]
             ticker = asset
-            missing_data, asset, std_3, return_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year, list_news = calculate_funds(asset)
+            missing_data, asset, std_3, return_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year, list_news, company_info, financial_info, portfolio, name_list, balance_sheet = calculate_funds(asset)
             if missing_data:
                 flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
             else:
                 if (asset):
-                    return render_template("funds_results.html", ticker=ticker, asset=asset, std_3=std_3, return_3=return_3, values_list=values_list, labels_list = labels_list, price=price, currency=currency, price_last_year=price_last_year, last_change=last_change, last_pct_change=last_pct_change, change_last_year=change_last_year, list_news=list_news)
+                    return render_template("funds_results.html", ticker=ticker, asset=asset, std_3=std_3, return_3=return_3, values_list=values_list, labels_list = labels_list, price=price, currency=currency, price_last_year=price_last_year, last_change=last_change, last_pct_change=last_pct_change, change_last_year=change_last_year, list_news=list_news, company_info=company_info, financial_info=financial_info, portfolio=portfolio, colors=colors, name_list = name_list, balance_sheet=balance_sheet.to_html(classes='table text-right'))
 
     return render_template("funds.html")
 

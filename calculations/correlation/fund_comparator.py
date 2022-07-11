@@ -4,16 +4,14 @@ import yfinance as yf
 
 from auxiliar.ft import calculate_profile, calculate_ft
 
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import base64
-import io
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from GoogleNews import GoogleNews
 
 import seaborn as sns
 from auxiliar.feed_security_data import retrieveFunds, retrieveSecurityDB, preDownloadSecurityDB
+from auxiliar.retrieve_company_info import retrieve_info
+from auxiliar.retrieve_balance_sheet import retrieve_balance_sheet
 
 
 def calculate_funds(asset):
@@ -27,7 +25,9 @@ def calculate_funds(asset):
     last_pct_change = 0
     price_last_year = 0
     funds_list = []
-
+    portfolio = []
+    name_list = []
+    balance_sheet = None
 
     start_date = datetime.today() - relativedelta(years=3)
     start_date = start_date.strftime('%Y-%m-%d')
@@ -40,6 +40,8 @@ def calculate_funds(asset):
         funds_list.remove(asset)
         funds_list.insert(0, asset)
     else:
+        if asset_type == 'ETF':
+            balance_sheet = calculate_ft(asset, asset_type, exchange, market, currency)
         funds_list.append(asset)
         funds_list = funds_list + retrieveFunds()
         funds_list = list(set(funds_list))
@@ -55,6 +57,8 @@ def calculate_funds(asset):
 
         data = data.round(3)
         if fund == asset:
+            portfolio = data['Close'].values.tolist()
+            name_list = pd.to_datetime(data.index).strftime('%Y-%m-%d').tolist()
             list_news = retrieveNews(name)
             price = yf.Ticker(asset).get_info()['regularMarketPrice']
             last_price = data['Close'][-1]
@@ -70,6 +74,9 @@ def calculate_funds(asset):
             last_pct_change = round(last_pct_change, 3)
             change_last_year = round(change_last_year, 3)
 
+            if asset_type == 'EQUITY':
+                balance_sheet = retrieve_balance_sheet(asset)
+            company_info, financial_info = retrieve_info(asset)
 
         security = retrieveSecurityDB(fund)
         if (security is not None):
@@ -101,12 +108,12 @@ def calculate_funds(asset):
         values_list.append(d)
 
 
-    return missingData, asset, return_3, std_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year, list_news
+    return missingData, asset, return_3, std_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year, list_news, company_info, financial_info, portfolio, name_list, balance_sheet
 
 
 def retrieveNews(ticker):
     news = GoogleNews(period='1w')
-    news.search(ticker+ 'SHARES')
+    news.search(ticker)
     result = news.result()
     data = pd.DataFrame.from_dict(result)
     list_news = []
@@ -117,5 +124,7 @@ def retrieveNews(ticker):
 
     data.head()
     return list_news
+
+
 
 
