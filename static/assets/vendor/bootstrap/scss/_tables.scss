@@ -74,6 +74,21 @@
   }
 }
 
+.table-borderless-2 {
+  th,
+  td,
+  thead th,
+  tbody + tbody {
+    border: 0;
+    text-align: right;
+  }
+
+,
+tbody tr:nth-of-type(#{$table-striped-order}) {
+  background-color: $table-accent-bg;
+}
+}
+
 // Zebra-striping
 //
 // Default zebra-stripe styles (alternating gray and transparent backgrounds)

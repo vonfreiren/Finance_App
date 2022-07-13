@@ -28,9 +28,27 @@ def calculate_ft(ticker, asset_type, exchange, market, currency):
         holdings_list = calculate_profile(ticker, exchange, asset_type)
     if(asset_type == etfs):
         holdings_list = calculate_holdings(holdings_list, dict_zones, ticker, exchange, asset_type, currency)
+        stars = calculate_ratings(ticker, exchange, asset_type, currency)
 
-    return holdings_list
+    return holdings_list, stars
 
+
+def calculate_ratings(ticker, exchange, asset_type, currency):
+    if ':' not in ticker:
+        ticker = ticker+':'+dictOfUSExchanges[exchange]
+    api_url = 'https://markets.ft.com/data/{0}/tearsheet/ratings?s={1}:{2}'.format(asset_type, ticker,
+                                                                                        currency)
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+
+    page = requests.get(api_url, headers=headers)
+    soup = BeautifulSoup(page.text, 'html.parser')
+
+    try:
+        stars = len(soup.find('span', attrs={'data-mod-stars-highlighted': True}).findChildren("i", recursive=False))
+    except:
+        stars = None
+    return stars
 
 def calculate_holdings(holdings_list, dict_zones, ticker, exchange, asset_type, currency):
     holdings_list = []
@@ -63,7 +81,6 @@ def calculate_holdings(holdings_list, dict_zones, ticker, exchange, asset_type, 
     weights_list = weights_list[:len(holdings_list)]
     data_tuples = list(zip(holdings_list, weights_list))
     balance_sheet = pd.DataFrame(data_tuples, columns=['Company', 'Allocation'])
-    balance_sheet = balance_sheet.set_index('Company')
 
     return balance_sheet
 

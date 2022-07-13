@@ -1,4 +1,4 @@
-from flask import session, flash, jsonify
+from flask import session, flash, jsonify, redirect, url_for
 import yfinance as yf
 import pandas as pd
 from datetime import datetime
@@ -136,16 +136,40 @@ def dividends():
 
     return render_template("dividends.html")
 
+@app.route('/funds_results/<ticker>', methods=['GET', 'POST'])
+def funds_results(ticker=None):
+    colors = []
+    for x in range(0, 1):
+        hexadecimal = ["#" + ''.join([random.choice('ABCDEF0123456789') for i in range(6)])]
+        colors.append(hexadecimal)
+    asset=ticker
+    asset = asset.split(' ')[0]
+    ticker = asset
+    missing_data, asset, std_3, return_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year, list_news, company_info, financial_info, portfolio, name_list, balance_sheet = calculate_funds(
+        asset)
+    if missing_data:
+        flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
+        print(" no reach")
+
+        return render_template("funds.html")
+    else:
+        if (asset):
+            print("reach2")
+            return render_template("funds_results.html", ticker=ticker, asset=asset, std_3=std_3, return_3=return_3,
+                                   values_list=values_list, labels_list=labels_list, price=price, currency=currency,
+                                   price_last_year=price_last_year, last_change=last_change,
+                                   last_pct_change=last_pct_change, change_last_year=change_last_year,
+                                   list_news=list_news, company_info=company_info, financial_info=financial_info,
+                                   portfolio=portfolio, colors=colors, name_list=name_list,
+                                   balance_sheet=balance_sheet.to_html(classes='table-borderless-2 text-right',
+                                                                       index=False))
+
+    return render_template('funds_results.html')
+
 
 @app.route('/funds_comparator', methods=['GET', 'POST'])
 def compare_fund():
-    ticker = ''
-    colors = []
 
-    for x in range(0, 1):
-        hexadecimal = ["#" + ''.join([random.choice('ABCDEF0123456789') for i in range(6)])]
-        print(x)
-        colors.append(hexadecimal)
     if request.method == 'POST':
         asset = request.form.get('asset')
         if (asset):
@@ -153,11 +177,13 @@ def compare_fund():
             ticker = asset
             missing_data, asset, std_3, return_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year, list_news, company_info, financial_info, portfolio, name_list, balance_sheet = calculate_funds(asset)
             if missing_data:
+                print("no reach")
                 flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
             else:
                 if (asset):
-                    return render_template("funds_results.html", ticker=ticker, asset=asset, std_3=std_3, return_3=return_3, values_list=values_list, labels_list = labels_list, price=price, currency=currency, price_last_year=price_last_year, last_change=last_change, last_pct_change=last_pct_change, change_last_year=change_last_year, list_news=list_news, company_info=company_info, financial_info=financial_info, portfolio=portfolio, colors=colors, name_list = name_list, balance_sheet=balance_sheet.to_html(classes='table text-right'))
-
+                    print("reach")
+                    funds_results(ticker)
+                    return redirect(url_for('funds_results', ticker=ticker))
     return render_template("funds.html")
 
 

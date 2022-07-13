@@ -15,15 +15,29 @@ dictOfExchanges = {':SHH': '.SS',
                    ':CPH': '.CO',
                    ':HKG': '.HK',
                    ':NSI': '.NS',
-                   ':TAI': '.TW'}
+                   ':TAI': '.TW',
+                   ':BER': '.BE'}
 
 equities='equities'
 etfs = 'etfs'
 
 dictOfUSExchanges = {'PCX': 'PCQ',
-                     'NSQ': 'NSQ',
-                     'NYQ': 'NYQ'}
+                     'NGM': 'NMQ',
+                     'NYQ': 'NYQ',
+                     'NSQ': 'NMQ'}
 
+
+dictOfExchangesMorningStar = {'us': 'arcx',
+                              'nl': 'xams',
+                              'ch': 'xswx',
+                              'de': 'xetr',
+                              'gb': 'xlon'}
+
+dictOfExchangesMorningStar_US = {'NGM': 'xnas',
+                              'PCX': 'arcx'}
+
+
+european_exchanges = {'xams', 'xswx', 'xetr'}
 
 #Does not work with KL
 #https://finance.yahoo.com/quote/1295.KL?p=1295.KL&.tsrc=fin-srch

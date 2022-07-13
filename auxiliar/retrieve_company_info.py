@@ -12,6 +12,7 @@ def retrieve_info(ticker):
     country = data_2['country'] if 'country' in data_2 else None
     website = data_2['website'] if 'website' in data_2 else None
     exchange_2 = data_2['exchange'] if 'exchange' in data_2 else None
+    recommendation = data_2['recommendationKey'] if 'recommendationKey' in data_2 else None
 
     company_info.append(summary)
     company_info.append(sector)
@@ -33,6 +34,7 @@ def retrieve_info(ticker):
     financial_info.append(pe)
     financial_info.append(debt_equity_ratio)
     financial_info.append(beta)
+    financial_info.append(recommendation)
 
     return company_info, financial_info
 
