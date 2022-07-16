@@ -21,7 +21,7 @@ dictOfExchanges = {':SHH': '.SS',
                    ':TOR': '.TO',
                    ':ASQ': ''}
 
-equities='equities'
+equities = 'equities'
 etfs = 'etfs'
 funds = 'funds'
 
@@ -31,7 +31,6 @@ dictOfUSExchanges = {'PCX': 'PCQ',
                      'NSQ': 'NMQ',
                      'ASQ': 'ASQ'}
 
-
 dictOfExchangesMorningStar = {'us': 'arcx',
                               'nl': 'xams',
                               'ch': 'xswx',
@@ -39,10 +38,9 @@ dictOfExchangesMorningStar = {'us': 'arcx',
                               'gb': 'xlon'}
 
 dictOfExchangesMorningStar_US = {'NGM': 'xnas',
-                              'PCX': 'arcx'}
-
+                                 'PCX': 'arcx'}
 
 european_exchanges = {'xams', 'xswx', 'xetr'}
 
-#Does not work with KL
-#https://finance.yahoo.com/quote/1295.KL?p=1295.KL&.tsrc=fin-srch
+# Does not work with KL
+# https://finance.yahoo.com/quote/1295.KL?p=1295.KL&.tsrc=fin-srch

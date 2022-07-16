@@ -1,4 +1,3 @@
-
 import matplotlib
 
 from auxiliar import constants
@@ -27,29 +26,25 @@ def optimize(assetList, initialValue, calculation_method, risk):
     labels_list = []
     for asset in assetList:
         data = yf.download(asset, '2000-01-01', endDate)
-        if(data.empty):
+        if (data.empty):
             missing_data = True
             return None, None, None, None, None, missing_data, None, None
 
         name, asset_type, exchange, market, currency, isin = preDownloadSecurityDB(asset)
         df[name] = data['Close']
 
-
     df.dropna()
 
     latest_prices = get_latest_prices(df)
 
-
-
     mu = mean_historical_return(df)
     S = CovarianceShrinkage(df).ledoit_wolf()
 
-
     ef = EfficientFrontier(mu, S)
-    if(calculation_method== constants.SHARPE_RATIO):
+    if (calculation_method == constants.SHARPE_RATIO):
         weights = ef.max_sharpe()
     elif (calculation_method == constants.MIN_VOLATILITY):
-            weights = ef.min_volatility()
+        weights = ef.min_volatility()
 
     elif (calculation_method == constants.MAX_RETURN):
         weights = ef._max_return()
@@ -63,12 +58,11 @@ def optimize(assetList, initialValue, calculation_method, risk):
         weights = ef.efficient_risk(risk)
 
     else:
-        weights= ef.max_sharpe()
+        weights = ef.max_sharpe()
 
     cleaned_weights = ef.clean_weights()
 
     ef.portfolio_performance(verbose=True)
-
 
     da = DiscreteAllocation(weights, latest_prices, total_portfolio_value=initialValue)
 
@@ -79,15 +73,13 @@ def optimize(assetList, initialValue, calculation_method, risk):
     for column in df2:
         df3[column] = df[column].values[-1] * df2[column]
 
-
     print(df3.iloc[0])
     values = df2.values.flatten()
     img = io.BytesIO()
     fig, ax = plt.subplots()
     sns.set_style("darkgrid")
 
-    ax = sns.barplot(x= df2.columns,y=values)
-
+    ax = sns.barplot(x=df2.columns, y=values)
 
     df = pd.DataFrame(allocation, index=[0])
     for price in latest_prices:
@@ -98,18 +90,18 @@ def optimize(assetList, initialValue, calculation_method, risk):
 
     values = df.values.flatten()
     img = io.BytesIO()
-    fig, ax = plt.subplots(figsize=(14,10), dpi=120)
+    fig, ax = plt.subplots(figsize=(14, 10), dpi=120)
     sns.set_style("darkgrid")
 
-    ax = sns.barplot(x= df.columns,y=values)
-    #ax = df.plot(kind="bar", stacked=False)
+    ax = sns.barplot(x=df.columns, y=values)
+    # ax = df.plot(kind="bar", stacked=False)
     ax.set(xlabel="")
     plt.savefig(img, format='png')
 
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue())
 
-    fig2, ax2 = plt.subplots(figsize=(6,6), dpi=50)
+    fig2, ax2 = plt.subplots(figsize=(6, 6), dpi=50)
     img2 = io.BytesIO()
     sns.set_style("darkgrid")
 
@@ -130,6 +122,7 @@ def optimize(assetList, initialValue, calculation_method, risk):
 
     return plot_url_2, allocation, df2, df3, leftover, missing_data, values_list, labels_list
 
+
 def adapt_risk(risk):
     if risk:
         risk = float(risk)
@@ -139,9 +132,3 @@ def adapt_risk(risk):
             risk = risk
 
     return risk
-
-
-
-
-
-

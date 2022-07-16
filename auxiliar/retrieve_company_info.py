@@ -37,5 +37,3 @@ def retrieve_info(ticker):
     financial_info.append(recommendation)
 
     return company_info, financial_info
-
-

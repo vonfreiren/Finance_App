@@ -9,12 +9,13 @@ from dateutil.relativedelta import relativedelta
 from sklearn.metrics import r2_score
 
 from auxiliar.constants import RISK_FREE_RATE, TRADING_DAYS
-from auxiliar.feed_security_data import retrieveFunds, retrieveSecurityDB, preDownloadSecurityDB
+from auxiliar.feed_security_data import retrieveSecurityDB, preDownloadSecurityDB
 from auxiliar.ft import calculate_ft
+from auxiliar.google import retrieve_isin
 from auxiliar.retrieve_balance_sheet import retrieve_balance_sheet
 from auxiliar.retrieve_company_info import retrieve_info
 from auxiliar.yahoo import calculate_expense_ratio
-from auxiliar.google import retrieve_isin
+
 
 def calculate_funds(asset):
     df = pd.DataFrame()
@@ -56,15 +57,15 @@ def calculate_funds(asset):
         funds_list.insert(0, asset)
     else:
         if asset_type == 'ETF' or asset_type == 'MUTUALFUND':
-            balance_sheet, stars, alpha, beta, r_squared = calculate_ft(asset, asset_type, exchange, market, currency, name)
+            balance_sheet, stars, alpha, beta, r_squared = calculate_ft(asset, asset_type, exchange, market, currency,
+                                                                        name)
             funds_list.append(asset)
-            #funds_list = funds_list + retrieveFunds()
+            # funds_list = funds_list + retrieveFunds()
             funds_list = list(set(funds_list))
             funds_list.remove(asset)
             funds_list.insert(0, asset)
         else:
             funds_list.append(asset)
-
 
     for fund in funds_list:
         fund = str(fund).strip("()").replace(',', '')
@@ -102,12 +103,10 @@ def calculate_funds(asset):
                 balance_sheet = retrieve_balance_sheet(asset)
                 company_info, financial_info = retrieve_info(asset)
 
-
         security = retrieveSecurityDB(fund)
         if (security is not None):
             fund = security.name
             isin_info = retrieve_isin(fund)
-
 
         start_price = data.Close[0]
         end_price = data.Close[-1]
@@ -121,7 +120,6 @@ def calculate_funds(asset):
             treynor_ratio = calculate_treynor_ratio(data, beta)
         else:
             treynor_ratio = None
-
 
         df2 = pd.DataFrame({'Return_3': expected_return, 'Std_3': standard_deviation}, index=[fund])
         performance_info.append(sharpe_ratio)
@@ -140,7 +138,7 @@ def calculate_funds(asset):
     if (security is not None):
         asset = security.name
 
-    #sharpe_ratio = df.loc[asset].Return_3 / df.loc[asset].Std_3
+    # sharpe_ratio = df.loc[asset].Return_3 / df.loc[asset].Std_3
 
     values_list = []
     labels_list = []
@@ -152,7 +150,7 @@ def calculate_funds(asset):
         labels_list.append(idx)
         values_list.append(d)
 
-    return missingData,asset_type, asset, return_3, standard_deviation, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year, list_news, company_info, financial_info, portfolio, name_list, balance_sheet, performance_info
+    return missingData, asset_type, asset, return_3, standard_deviation, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year, list_news, company_info, financial_info, portfolio, name_list, balance_sheet, performance_info
 
 
 def retrieveNews(ticker):
@@ -208,7 +206,7 @@ def calculate_max_drawdown(data):
     peak = comp_ret.expanding(min_periods=1).max()
     dd = (comp_ret / peak) - 1
     max_dd = abs(dd.min())
-    return round(max_dd, 3), (dd.idxmin()- relativedelta(days=1)).strftime('%Y-%m-%d')
+    return round(max_dd, 3), (dd.idxmin() - relativedelta(days=1)).strftime('%Y-%m-%d')
 
 
 def calculate_calmar_ratio(data, max_drawdown):
@@ -222,4 +220,3 @@ def calculate_treynor_ratio(data, beta):
     expected_return = expected_return - RISK_FREE_RATE
     treynor_ratio = expected_return / float(beta)
     return round(treynor_ratio, 3)
-

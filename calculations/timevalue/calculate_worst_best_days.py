@@ -1,12 +1,12 @@
-
-import yfinance as yf
-import pandas as pd
 from datetime import datetime
+
 import matplotlib
+import pandas as pd
+import yfinance as yf
+
 matplotlib.use('Agg')
 
 from auxiliar.feed_security_data import preDownloadSecurityDB
-
 
 
 def calculate_worst_best(asset):
@@ -30,7 +30,6 @@ def calculate_worst_best(asset):
     price_three_years_ago = data['Close'][-255 * 3]
     prices_list.append(price_three_years_ago)
 
-
     data.dropna()
     data['pct_change'] = data['Close'].pct_change()
     name, asset_type, exchange, market, currency, isin = preDownloadSecurityDB(asset)
@@ -42,8 +41,5 @@ def calculate_worst_best(asset):
     security_info.append(name)
     security_info.append(currency)
     security_info.append(asset)
-
-
-
 
     return df.head(10), df.tail(10), missingData, prices_list, security_info

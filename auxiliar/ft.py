@@ -1,7 +1,7 @@
+import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
-import re
+
 from auxiliar.equivalence_map import dictOfExchanges, equities, etfs, dictOfUSExchanges
 from auxiliar.google import retrieve_isin
 
@@ -15,42 +15,41 @@ def calculate_ft(ticker, asset_type, exchange, market, currency, name):
     r_squared = ''
     stars = ''
 
-    if(asset_type == 'EQUITY'):
+    if (asset_type == 'EQUITY'):
         asset_type = equities
 
-    if(asset_type.lower() in etfs):
+    if (asset_type.lower() in etfs):
         asset_type = etfs
 
     inv_dictOfExchanges = {v: k for k, v in dictOfExchanges.items()}
 
     if '.' in ticker:
-        replace_value = inv_dictOfExchanges.get('.'+ticker.split('.')[-1])
+        replace_value = inv_dictOfExchanges.get('.' + ticker.split('.')[-1])
         if replace_value:
             exchange = replace_value
             ticker = ticker.replace(ticker[-3:], replace_value)
 
-
-    if(asset_type == equities):
+    if (asset_type == equities):
         holdings_list = calculate_profile(ticker, exchange, asset_type)
-    if(asset_type == etfs or asset_type == 'MUTUALFUND'):
+    if (asset_type == etfs or asset_type == 'MUTUALFUND'):
         isin = retrieve_isin(name)
         holdings_list = calculate_holdings(holdings_list, dict_zones, ticker, exchange, asset_type, currency, isin[0])
         stars = calculate_ratings(ticker, exchange, asset_type, currency, isin[0])
-        alpha, beta, r_squared =  calculate_risk(ticker, exchange, asset_type, currency, isin[0])
+        alpha, beta, r_squared = calculate_risk(ticker, exchange, asset_type, currency, isin[0])
 
     return holdings_list, stars, alpha, beta, r_squared
 
 
 def calculate_ratings(ticker, exchange, asset_type, currency, isin):
     if ':' not in ticker:
-        ticker = ticker+':'+dictOfUSExchanges[exchange]
+        ticker = ticker + ':' + dictOfUSExchanges[exchange]
 
     if (asset_type == 'MUTUALFUND'):
         api_url = 'https://markets.ft.com/data/funds/tearsheet/ratings?s={0}:{1}'.format(isin, currency)
     else:
         api_url = 'https://markets.ft.com/data/{0}/tearsheet/ratings?s={1}:{2}'.format(asset_type, ticker,
 
-                                                                                           currency)
+                                                                                       currency)
 
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
@@ -64,14 +63,15 @@ def calculate_ratings(ticker, exchange, asset_type, currency, isin):
         stars = None
     return stars
 
+
 def calculate_risk(ticker, exchange, asset_type, currency, isin):
     if ':' not in ticker:
-        ticker = ticker+':'+dictOfUSExchanges[exchange]
+        ticker = ticker + ':' + dictOfUSExchanges[exchange]
     api_url = 'https://markets.ft.com/data/{0}/tearsheet/risk?s={1}:{2}'.format(asset_type, ticker,
-                                                                                        currency)
+                                                                                currency)
 
-    if(asset_type=='MUTUALFUND'):
-        api_url= 'https://markets.ft.com/data/funds/tearsheet/risk?s={0}:{1}'.format(isin, currency)
+    if (asset_type == 'MUTUALFUND'):
+        api_url = 'https://markets.ft.com/data/funds/tearsheet/risk?s={0}:{1}'.format(isin, currency)
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
@@ -79,29 +79,30 @@ def calculate_risk(ticker, exchange, asset_type, currency, isin):
     soup = BeautifulSoup(page.text, 'html.parser')
 
     try:
-        #The informatioin is in grouf of 6
+        # The informatioin is in grouf of 6
         # First 6 -> 1 year
         # 6-12 -> 3 years
         # 13-18 -> 5 years
-        alpha = soup.find_all("td", {'class':'mod-ui-table__cell--text'})[6].find_next().text
+        alpha = soup.find_all("td", {'class': 'mod-ui-table__cell--text'})[6].find_next().text
         beta = soup.find_all("td", {'class': 'mod-ui-table__cell--text'})[7].find_next().text
         r_squared = soup.find_all("td", {'class': 'mod-ui-table__cell--text'})[9].find_next().text
     except:
         return None, None, None
     return alpha, beta, r_squared
 
+
 def calculate_holdings(holdings_list, dict_zones, ticker, exchange, asset_type, currency, isin):
     holdings_list = []
     weights_list = []
 
     if ':' not in ticker:
-        ticker = ticker+':'+dictOfUSExchanges[exchange]
+        ticker = ticker + ':' + dictOfUSExchanges[exchange]
 
     api_url = 'https://markets.ft.com/data/{0}/tearsheet/holdings?s={1}:{2}'.format(asset_type, ticker,
-                                                                                        currency)
+                                                                                    currency)
 
-    if(asset_type=='MUTUALFUND'):
-        api_url= 'https://markets.ft.com/data/funds/tearsheet/holdings?s={0}:{1}'.format(isin, currency)
+    if (asset_type == 'MUTUALFUND'):
+        api_url = 'https://markets.ft.com/data/funds/tearsheet/holdings?s={0}:{1}'.format(isin, currency)
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
@@ -128,9 +129,11 @@ def calculate_holdings(holdings_list, dict_zones, ticker, exchange, asset_type, 
     data_tuples = list(zip(holdings_list, weights_list))
     balance_sheet = pd.DataFrame(data_tuples, columns=['Company', 'Allocation'])
 
-    balance_sheet['Company'] = '<a href=/funds_results/'+balance_sheet['Company'] + '>' + balance_sheet['Company'] + '</a>'
+    balance_sheet['Company'] = '<a href=/funds_results/' + balance_sheet['Company'] + '>' + balance_sheet[
+        'Company'] + '</a>'
 
     return balance_sheet
+
 
 def ammend_tickers(holdings_list):
     new_holding_list = []
@@ -149,8 +152,10 @@ def ammend_tickers(holdings_list):
 
     return new_holding_list
 
+
 def remove_dots(text):
     return text.replace('..', '.')
+
 
 # summary
 def calculate_summary(holdings_list, dict_zones, ticker, exchange, asset_type, currency):
@@ -198,5 +203,3 @@ def calculate_profile(ticker, exchange, asset_type):
                     print(ticker)
                     new_holdings_list.append(ticker)
     return new_holdings_list
-
-

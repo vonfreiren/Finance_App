@@ -1,9 +1,10 @@
-
-import yfinance as yf
-import pandas as pd
 from datetime import datetime
-import numpy as np
+
 import matplotlib
+import numpy as np
+import pandas as pd
+import yfinance as yf
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import base64
@@ -16,19 +17,16 @@ def calculation(assetList):
     startDate = '2000-01-01'
     df = pd.DataFrame()
 
-
     for asset in assetList:
         data = yf.download(asset, startDate, endDate)
         missingData = False
-        if(data.empty):
+        if (data.empty):
             missingData = True
             return None, True, None
         name, asset_type, exchange, market, currency, isin = preDownloadSecurityDB(asset)
         df[name] = data['Close']
 
-
     df.dropna()
-
 
     log_returns = np.log(df / df.shift())
     n = 5000
@@ -54,10 +52,8 @@ def calculation(assetList):
         values_list.append(d)
         labels_list.append(sharpe_ratios[i].round(2))
 
-
-
     img = io.BytesIO()
-    fig, ax = plt.subplots(figsize=(6,4))  # Sample figsize in inches
+    fig, ax = plt.subplots(figsize=(6, 4))  # Sample figsize in inches
     ax.scatter(exp_vols, exp_rtns, c=sharpe_ratios)
     ax.scatter(exp_vols[sharpe_ratios.argmax()], exp_rtns[sharpe_ratios.argmax()], c='r')
     ax.set_xlabel('Expected Volatility')

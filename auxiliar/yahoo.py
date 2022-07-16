@@ -1,16 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
-import re
-
-from auxiliar.equivalence_map import dictOfExchangesMorningStar, dictOfExchangesMorningStar_US
-
-
 
 
 def calculate_expense_ratio(ticker):
     yahoo_info = []
     expense_ratio = ''
-
 
     url = 'https://finance.yahoo.com/quote/{0}'.format(ticker)
 

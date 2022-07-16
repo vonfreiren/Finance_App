@@ -21,7 +21,7 @@ def calculate_portfolio(assetList, weightList, initialValue, startDate):
     weightList = [float(i) for i in weightList]
     name = ""
 
-    wrong_weights = abs(sum(weightList)-1) > 0.00000001
+    wrong_weights = abs(sum(weightList) - 1) > 0.00000001
     missing_data = False
 
     for asset in assetList:
@@ -40,7 +40,7 @@ def calculate_portfolio(assetList, weightList, initialValue, startDate):
         aggregated["Portfolio"] = aggregated.values.sum(axis=1)
     aggregated.set_index(df.index)
     sns.set_style("dark")
-    #ax = sns.lineplot(data=aggregated, markers=False)
+    # ax = sns.lineplot(data=aggregated, markers=False)
 
     # ax.get_figure().autofmt_xdate()
     # ax.set_xlabel("Time")
@@ -84,8 +84,7 @@ def calculate_portfolio(assetList, weightList, initialValue, startDate):
             list_lists.append(aggregated[column].values.tolist())
             asset_labels.append(column)
 
-
-    #values = [row[0] for row in values]
+    # values = [row[0] for row in values]
 
     # print(totalValue.tail())
 

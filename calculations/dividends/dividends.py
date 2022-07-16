@@ -1,13 +1,8 @@
-
-import yfinance as yf
 import matplotlib
-import matplotlib.pyplot as plt
-import base64
-import io
-import seaborn as sns
 import pandas as pd
+import yfinance as yf
+
 from auxiliar.feed_security_data import preDownloadSecurityDB
-from auxiliar.ft import calculate_ft
 from auxiliar.retrieve_company_info import retrieve_info
 
 matplotlib.use('Agg')
@@ -32,7 +27,6 @@ def retrieve_dividends(asset):
 
     company_info, financial_info = retrieve_info(asset)
 
-
     df = data.to_frame()
     mean = data.mean().round(2)
     last_5 = df.tail(5)
@@ -48,9 +42,5 @@ def retrieve_dividends(asset):
     labels = pd.to_datetime(df.index).strftime('%Y-%m-%d').tolist()
     for column in df.columns:
         list_lists.append(df[column].values.tolist())
-
-
-
-
 
     return missingData, dividend_info, last_5, values, labels, security_info, company_info, financial_info

@@ -1,5 +1,7 @@
 import re
+
 import matplotlib
+
 matplotlib.use('Agg')
 import requests
 import csv
