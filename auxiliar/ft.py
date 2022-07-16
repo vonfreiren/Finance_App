@@ -1,13 +1,19 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import re
 from auxiliar.equivalence_map import dictOfExchanges, equities, etfs, dictOfUSExchanges
+from auxiliar.google import retrieve_isin
 
 
-def calculate_ft(ticker, asset_type, exchange, market, currency):
+def calculate_ft(ticker, asset_type, exchange, market, currency, name):
     holdings_list = []
     zones_list = []
     dict_zones = {}
+    alpha = ''
+    beta = ''
+    r_squared = ''
+    stars = ''
 
     if(asset_type == 'EQUITY'):
         asset_type = equities
@@ -18,7 +24,7 @@ def calculate_ft(ticker, asset_type, exchange, market, currency):
     inv_dictOfExchanges = {v: k for k, v in dictOfExchanges.items()}
 
     if '.' in ticker:
-        replace_value = inv_dictOfExchanges.get(ticker[-3:])
+        replace_value = inv_dictOfExchanges.get('.'+ticker.split('.')[-1])
         if replace_value:
             exchange = replace_value
             ticker = ticker.replace(ticker[-3:], replace_value)
@@ -26,18 +32,26 @@ def calculate_ft(ticker, asset_type, exchange, market, currency):
 
     if(asset_type == equities):
         holdings_list = calculate_profile(ticker, exchange, asset_type)
-    if(asset_type == etfs):
-        holdings_list = calculate_holdings(holdings_list, dict_zones, ticker, exchange, asset_type, currency)
-        stars = calculate_ratings(ticker, exchange, asset_type, currency)
+    if(asset_type == etfs or asset_type == 'MUTUALFUND'):
+        isin = retrieve_isin(name)
+        holdings_list = calculate_holdings(holdings_list, dict_zones, ticker, exchange, asset_type, currency, isin[0])
+        stars = calculate_ratings(ticker, exchange, asset_type, currency, isin[0])
+        alpha, beta, r_squared =  calculate_risk(ticker, exchange, asset_type, currency, isin[0])
 
-    return holdings_list, stars
+    return holdings_list, stars, alpha, beta, r_squared
 
 
-def calculate_ratings(ticker, exchange, asset_type, currency):
+def calculate_ratings(ticker, exchange, asset_type, currency, isin):
     if ':' not in ticker:
         ticker = ticker+':'+dictOfUSExchanges[exchange]
-    api_url = 'https://markets.ft.com/data/{0}/tearsheet/ratings?s={1}:{2}'.format(asset_type, ticker,
-                                                                                        currency)
+
+    if (asset_type == 'MUTUALFUND'):
+        api_url = 'https://markets.ft.com/data/funds/tearsheet/ratings?s={0}:{1}'.format(isin, currency)
+    else:
+        api_url = 'https://markets.ft.com/data/{0}/tearsheet/ratings?s={1}:{2}'.format(asset_type, ticker,
+
+                                                                                           currency)
+
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
@@ -50,13 +64,44 @@ def calculate_ratings(ticker, exchange, asset_type, currency):
         stars = None
     return stars
 
-def calculate_holdings(holdings_list, dict_zones, ticker, exchange, asset_type, currency):
-    holdings_list = []
-    weights_list = []
+def calculate_risk(ticker, exchange, asset_type, currency, isin):
     if ':' not in ticker:
         ticker = ticker+':'+dictOfUSExchanges[exchange]
+    api_url = 'https://markets.ft.com/data/{0}/tearsheet/risk?s={1}:{2}'.format(asset_type, ticker,
+                                                                                        currency)
+
+    if(asset_type=='MUTUALFUND'):
+        api_url= 'https://markets.ft.com/data/funds/tearsheet/risk?s={0}:{1}'.format(isin, currency)
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+
+    page = requests.get(api_url, headers=headers)
+    soup = BeautifulSoup(page.text, 'html.parser')
+
+    try:
+        #The informatioin is in grouf of 6
+        # First 6 -> 1 year
+        # 6-12 -> 3 years
+        # 13-18 -> 5 years
+        alpha = soup.find_all("td", {'class':'mod-ui-table__cell--text'})[6].find_next().text
+        beta = soup.find_all("td", {'class': 'mod-ui-table__cell--text'})[7].find_next().text
+        r_squared = soup.find_all("td", {'class': 'mod-ui-table__cell--text'})[9].find_next().text
+    except:
+        return None, None, None
+    return alpha, beta, r_squared
+
+def calculate_holdings(holdings_list, dict_zones, ticker, exchange, asset_type, currency, isin):
+    holdings_list = []
+    weights_list = []
+
+    if ':' not in ticker:
+        ticker = ticker+':'+dictOfUSExchanges[exchange]
+
     api_url = 'https://markets.ft.com/data/{0}/tearsheet/holdings?s={1}:{2}'.format(asset_type, ticker,
                                                                                         currency)
+
+    if(asset_type=='MUTUALFUND'):
+        api_url= 'https://markets.ft.com/data/funds/tearsheet/holdings?s={0}:{1}'.format(isin, currency)
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
@@ -79,8 +124,11 @@ def calculate_holdings(holdings_list, dict_zones, ticker, exchange, asset_type, 
 
     holdings_list = ammend_tickers(holdings_list)
     weights_list = weights_list[:len(holdings_list)]
+
     data_tuples = list(zip(holdings_list, weights_list))
     balance_sheet = pd.DataFrame(data_tuples, columns=['Company', 'Allocation'])
+
+    balance_sheet['Company'] = '<a href=/funds_results/'+balance_sheet['Company'] + '>' + balance_sheet['Company'] + '</a>'
 
     return balance_sheet
 
@@ -96,10 +144,13 @@ def ammend_tickers(holdings_list):
             replace_value = dictOfExchanges.get(exchange)
             if replace_value:
                 holding = holding.replace(exchange, replace_value)
+                holding = remove_dots(holding)
             new_holding_list.append(holding.split('-')[0])
 
     return new_holding_list
 
+def remove_dots(text):
+    return text.replace('..', '.')
 
 # summary
 def calculate_summary(holdings_list, dict_zones, ticker, exchange, asset_type, currency):

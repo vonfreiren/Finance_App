@@ -16,15 +16,20 @@ dictOfExchanges = {':SHH': '.SS',
                    ':HKG': '.HK',
                    ':NSI': '.NS',
                    ':TAI': '.TW',
-                   ':BER': '.BE'}
+                   ':BER': '.BE',
+                   ':FRA': '.F',
+                   ':TOR': '.TO',
+                   ':ASQ': ''}
 
 equities='equities'
 etfs = 'etfs'
+funds = 'funds'
 
 dictOfUSExchanges = {'PCX': 'PCQ',
                      'NGM': 'NMQ',
                      'NYQ': 'NYQ',
-                     'NSQ': 'NMQ'}
+                     'NSQ': 'NMQ',
+                     'ASQ': 'ASQ'}
 
 
 dictOfExchangesMorningStar = {'us': 'arcx',

@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib
 
 from auxiliar import constants
+from auxiliar.equivalence_map import etfs, equities
 
 matplotlib.use('Agg')
 from flask_sqlalchemy import SQLAlchemy
@@ -54,7 +55,7 @@ db = SQLAlchemy(app)
 class Security(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ticker = db.Column(db.String(100), unique=False, nullable=False)
-    name = db.Column(db.String(100), unique=False, nullable=False)
+    name = db.Column(db.String(300), unique=False, nullable=False)
     asset_type = db.Column(db.String(100), unique=False, nullable=False)
     exchange = db.Column(db.String(100), unique=False, nullable=True)
     market = db.Column(db.String(100), unique=False, nullable=True)
@@ -145,26 +146,42 @@ def funds_results(ticker=None):
     asset=ticker
     asset = asset.split(' ')[0]
     ticker = asset
-    missing_data, asset, std_3, return_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year, list_news, company_info, financial_info, portfolio, name_list, balance_sheet = calculate_funds(
+    missing_data, asset_type, asset, std_3, return_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year, list_news, company_info, financial_info, portfolio, name_list, balance_sheet, performance_info = calculate_funds(
         asset)
     if missing_data:
         flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
-        print(" no reach")
-
-        return render_template("funds.html")
+        return redirect(url_for('compare_fund'))
     else:
         if (asset):
-            print("reach2")
-            return render_template("funds_results.html", ticker=ticker, asset=asset, std_3=std_3, return_3=return_3,
+            if asset_type == etfs or asset_type == 'MUTUALFUND':
+                return render_template("funds_results.html", ticker=ticker, asset=asset, std_3=std_3, return_3=return_3,
                                    values_list=values_list, labels_list=labels_list, price=price, currency=currency,
                                    price_last_year=price_last_year, last_change=last_change,
                                    last_pct_change=last_pct_change, change_last_year=change_last_year,
                                    list_news=list_news, company_info=company_info, financial_info=financial_info,
                                    portfolio=portfolio, colors=colors, name_list=name_list,
                                    balance_sheet=balance_sheet.to_html(classes='table-borderless-2 text-right',
-                                                                       index=False))
+                                                                       index=False, escape=False), performance_info=performance_info )
+            if asset_type == equities:
+                return render_template("equities_results.html", ticker=ticker, asset=asset, std_3=std_3, return_3=return_3,
+                                   values_list=values_list, labels_list=labels_list, price=price, currency=currency,
+                                   price_last_year=price_last_year, last_change=last_change,
+                                   last_pct_change=last_pct_change, change_last_year=change_last_year,
+                                   list_news=list_news, company_info=company_info, financial_info=financial_info,
+                                   portfolio=portfolio, colors=colors, name_list=name_list,
+                                   balance_sheet=balance_sheet.to_html(classes='table-borderless-2 text-right',
+                                                                       index=False), performance_info=performance_info )
+            else:
+                return render_template("equities_results.html", ticker=ticker, asset=asset, std_3=std_3, return_3=return_3,
+                                   values_list=values_list, labels_list=labels_list, price=price, currency=currency,
+                                   price_last_year=price_last_year, last_change=last_change,
+                                   last_pct_change=last_pct_change, change_last_year=change_last_year,
+                                   list_news=list_news, company_info=company_info, financial_info=financial_info,
+                                   portfolio=portfolio, colors=colors, name_list=name_list, performance_info=performance_info)
 
-    return render_template('funds_results.html')
+    flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
+    return redirect(url_for('compare_fund'))
+    return render_template('funds.html')
 
 
 @app.route('/funds_comparator', methods=['GET', 'POST'])
@@ -175,15 +192,10 @@ def compare_fund():
         if (asset):
             asset = asset.split(' ')[0]
             ticker = asset
-            missing_data, asset, std_3, return_3, values_list, labels_list, price, currency, price_last_year, last_change, last_pct_change, change_last_year, list_news, company_info, financial_info, portfolio, name_list, balance_sheet = calculate_funds(asset)
-            if missing_data:
-                print("no reach")
-                flash(constants.MISSING_DATA_TICKER, constants.FLASH_DANGER_CATEGORY)
-            else:
-                if (asset):
-                    print("reach")
-                    funds_results(ticker)
-                    return redirect(url_for('funds_results', ticker=ticker))
+            funds_results(ticker)
+            return redirect(url_for('funds_results', ticker=ticker))
+        return render_template("funds.html")
+
     return render_template("funds.html")
 
 
@@ -347,7 +359,7 @@ def correlation():
             log_returns, missingData, missing_ticker = fetchData(assetList)
             if (missingData != True):
                 for item, instrument in enumerate(assetList):
-                    name, asset_type, exchange, market, currency = preDownloadSecurityDB(instrument)
+                    name, asset_type, exchange, market, currency, isin = preDownloadSecurityDB(instrument)
                     if (item == 1):
                         assetName2 = name
                     else:

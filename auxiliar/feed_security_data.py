@@ -1,5 +1,7 @@
 import matplotlib
 
+from auxiliar.google import retrieve_isin
+
 matplotlib.use('Agg')
 
 from flask_sqlalchemy import SQLAlchemy
@@ -53,12 +55,18 @@ def preDownloadSecurityDB(instrument):
         exchange = security.exchange
         market = security.market
         currency = security.currency
+        isin = security.isin
+        if isin == '':
+            isin = retrieve_isin(assetName)
+
+
     else:
-        assetName, quoteType, exchange, market, currency, yield_amount, category, morningStarRiskRating = retrieveAssetName(
+        assetName, quoteType, exchange, market, currency, yield_amount, category, isin = retrieveAssetName(
             instrument)
+        isin = retrieve_isin(assetName)
         insertSecurityDB(instrument, assetName, quoteType, exchange, market, currency, yield_amount,
-                         category, morningStarRiskRating)
-    return assetName, quoteType, exchange, market, currency
+                         category, '', isin=isin[0])
+    return assetName, quoteType, exchange, market, currency, isin[0]
 
 
 def retrieveSecurityDB(asset):
@@ -72,10 +80,10 @@ def retrieveFunds():
 
 
 def insertSecurityDB(asset, assetName, quoteType, exchange, market, currency, yield_amount, category,
-                     morningStarRiskRating):
+                     morningStarRiskRating, isin):
     security = Security(ticker=asset, name=assetName, asset_type=quoteType, exchange=exchange, market=market,
                         currency=currency, yield_amount=yield_amount, category=category,
-                        morningstar_rating=morningStarRiskRating, isin="")
+                        morningstar_rating=morningStarRiskRating, isin=isin)
     db.session.add(security)
     db.session.commit()
 

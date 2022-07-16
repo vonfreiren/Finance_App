@@ -31,7 +31,7 @@ def optimize(assetList, initialValue, calculation_method, risk):
             missing_data = True
             return None, None, None, None, None, missing_data, None, None
 
-        name, asset_type, exchange, market, currency = preDownloadSecurityDB(asset)
+        name, asset_type, exchange, market, currency, isin = preDownloadSecurityDB(asset)
         df[name] = data['Close']
 
 

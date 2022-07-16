@@ -25,7 +25,7 @@ def retrieve_dividends(asset):
         return missingData, None, None, None, None
     data.dropna()
     data = data.round(2)
-    name, asset_type, exchange, market, currency = preDownloadSecurityDB(asset)
+    name, asset_type, exchange, market, currency, isin = preDownloadSecurityDB(asset)
     security_info.append(name)
     security_info.append(currency)
     security_info.append(asset)

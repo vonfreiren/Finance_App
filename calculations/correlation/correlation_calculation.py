@@ -27,7 +27,7 @@ def calculation_multiple(assetlist):
             missingData = True
             return None, missingData, asset
         data['pct_change'] = data['Close'].pct_change()
-        name, asset_type, exchange, market, currency = preDownloadSecurityDB(asset)
+        name, asset_type, exchange, market, currency, isin = preDownloadSecurityDB(asset)
         df[name] = data['pct_change']
 
     data.dropna()
